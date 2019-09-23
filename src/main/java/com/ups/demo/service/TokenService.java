@@ -247,4 +247,16 @@ public class TokenService {
 
         };
     }
+
+    public String getUserTypeByOpenId(String openId) {
+        return userMapper.selectByOpenId(openId);
+    }
+
+    public String wxBind(String userName, String passWord, String openId) {
+        String password = userMapper.selectPassWordByUserName(userName);
+        if(passWord.equals(password)) {
+            userMapper.updateOpenId(openId);
+            return userMapper.selectByOpenId(openId);
+        }else { return null; }
+    }
 }

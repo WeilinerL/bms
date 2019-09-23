@@ -1,6 +1,9 @@
 package com.ups.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.TokenService;
+import com.ups.demo.utils.WXAppletUserInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/api")
 public class LoginController {
 
     private final static Log log = LogFactory.getLog(LoginController.class);
@@ -21,8 +26,15 @@ public class LoginController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping(value = "login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> userInfo,
+    /**
+     * PC 登录模块
+     * @param userInfo 前端传递的用户信息
+     * @param userAgent 登录客户端
+     * @return {code: int,data: Object}
+     */
+
+    @PostMapping(value = "login/pc")
+    public ResponseEntity<Map<String, Object>> loginPC(@RequestBody Map<String, String> userInfo,
                                                      @RequestHeader(value="User-Agent") String userAgent){
         String userName = userInfo.get("userName");
         String password = userInfo.get("password");
@@ -31,18 +43,102 @@ public class LoginController {
         HashMap<String, Object> result = new HashMap<>();
         String token = tokenService.loginCheck(userName, password,userAgent, userType);
         if(token == null) {
-            result.put("message", "invalid username or password");
-            result.put("status","fail");
+            if(log.isTraceEnabled()) {
+                log.trace("PC端登录 token令牌为空");
+            }
+            result.put("code", 0);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }else {
             if(log.isTraceEnabled()) {
-                log.trace("用户名为"+ tokenService.getUserFromToken(token).getUsername() + "的用户成功登录");
+                log.trace("PC端登录 用户名为"+ tokenService.getUserFromToken(token).getUsername() + "的用户成功登录");
             }
-            result.put("userName",tokenService.getUserFromToken(token).getUsername());
-            result.put("token", token);
-            result.put("userAgent",userAgent);
-            result.put("userType",userType);
-            result.put("status","success");
+            JSONObject data = new JSONObject();
+            data.put("userName",tokenService.getUserFromToken(token).getUsername());
+            data.put("userType",userType);
+            data.put("token",token);
+            result.put("code",1);
+            result.put("data",data);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    /**
+     * 微信小程序端登录
+     * @param JSONCONTENT json 字符串 包含{code: String} //小程序wx.login获取的
+     * @return {code: int, data: {userType: String}}
+     */
+
+    @PostMapping(value = "login/weixin")
+    public ResponseEntity<Map<String, Object>> loginWeiXin(@RequestBody String JSONCONTENT) {
+        HashMap<String, Object> result = new HashMap<>();
+        if(JSONCONTENT.contains("code")) {
+            JSONObject json = JSON.parseObject(JSONCONTENT);
+            String code = json.getString("code");
+            if(code != null) {
+                if(log.isTraceEnabled()) {
+                    log.trace("微信小程序端登录 登录码: " + code);
+                }
+                JSONObject wxResult = WXAppletUserInfo.getSessionKeyAndOpenId(code);
+                JSONObject data = new JSONObject();
+                data.put("userType",tokenService.getUserTypeByOpenId(wxResult.getString("openId")));
+                result.put("code",1);
+                result.put("data",data);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }else {
+                if(log.isTraceEnabled()) {
+                    log.trace("微信小程序端登录 登录码为空");
+                }
+                result.put("code",0);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
+        }else {
+            result.put("code",0);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    /**
+     * 小程序绑定账户
+     * @param JSONCONTENT json 字符串 包含 {user_id: string, //用户账号，手机号，邮箱 password: string, //md5加密 code: string} //小程序wx.login获取的
+     * @return {code: int, data: {userType: String}}
+     */
+    @PostMapping(value = "auth/bind")
+    public ResponseEntity<Map<String, Object>> wxBind(@RequestBody String JSONCONTENT) {
+        HashMap<String, Object> result = new HashMap<>();
+        if(JSONCONTENT.contains("user_id") && JSONCONTENT.contains("password") && JSONCONTENT.contains("code")) {
+            JSONObject json = JSON.parseObject(JSONCONTENT);
+            String code = json.getString("code");
+            String userName = json.getString("user_id");
+            String passWord = json.getString("password");
+            if(code != null && userName != null && passWord != null) {
+                if(log.isTraceEnabled()) {
+                    log.trace("微信小程序端登录 用户名: " + userName + " code: " + code);
+                }
+                JSONObject wxResult = WXAppletUserInfo.getSessionKeyAndOpenId(code);
+                String userType = tokenService.wxBind(userName,passWord,wxResult.getString("openId"));
+                if(userType != null) {
+                    JSONObject data = new JSONObject();
+                    data.put("userType",userType);
+                    result.put("code",1);
+                    result.put("data",data);
+                    return ResponseEntity.status(HttpStatus.OK).body(result);
+                }else {
+                    if(log.isTraceEnabled()) {
+                        log.trace("微信小程序端登录 密码错误");
+                    }
+                    result.put("code",0);
+                    return ResponseEntity.status(HttpStatus.OK).body(result);
+                }
+            }else {
+                if(log.isTraceEnabled()) {
+                    log.trace("微信小程序端登录 有参数为空");
+                }
+                result.put("code",0);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
+
+        }else {
+            result.put("code",0);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
@@ -91,6 +187,27 @@ public class LoginController {
             return result;
         }
         result.put("result", "fail");
+        return result;
+    }
+
+    @PostMapping(value = "test")
+    public Map<Object,Object> testApi(@RequestBody String JSONCONTENT) {
+        Map<Object,Object> result = new HashMap<>();
+        JSONObject json = JSON.parseObject(JSONCONTENT);
+        if(json != null) {
+            if(log.isTraceEnabled()) {
+                log.trace("接口测试 列表大小: " + json.get("deviceList"));
+            }
+            List<Object> list= (List<Object>) json.get("deviceList");
+            Iterator<Object> objectIterator = list.iterator();
+            while(objectIterator.hasNext()) {
+                System.out.println(objectIterator.next());
+            }
+            result.put("code",1);
+        }else {
+            result.put("code",0);
+        }
+
         return result;
     }
 

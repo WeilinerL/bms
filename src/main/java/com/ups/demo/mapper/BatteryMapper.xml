@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ups.demo.dao.BatteryMapper" >
+  <resultMap id="BaseResultMap" type="com.ups.demo.pojo.Battery" >
+    <id column="int_battery_id" property="intBatteryId" jdbcType="INTEGER" />
+    <result column="double_voltage" property="doubleVoltage" jdbcType="DOUBLE" />
+    <result column="double_temprature" property="doubleTemprature" jdbcType="DOUBLE" />
+    <result column="double_resistan" property="doubleResistan" jdbcType="DOUBLE" />
+    <result column="double_capacity" property="doubleCapacity" jdbcType="DOUBLE" />
+    <result column="str_group_name" property="strGroupName" jdbcType="VARCHAR" />
+    <result column="data_read_time" property="dataReadTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_battery_id, double_voltage, double_temprature, double_resistan, double_capacity, 
+    str_group_name, data_read_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_battery
+    where int_battery_id = #{intBatteryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_battery
+    where int_battery_id = #{intBatteryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ups.demo.pojo.Battery" >
+    insert into t_battery (int_battery_id, double_voltage, double_temprature, 
+      double_resistan, double_capacity, str_group_name, 
+      data_read_time)
+    values (#{intBatteryId,jdbcType=INTEGER}, #{doubleVoltage,jdbcType=DOUBLE}, #{doubleTemprature,jdbcType=DOUBLE}, 
+      #{doubleResistan,jdbcType=DOUBLE}, #{doubleCapacity,jdbcType=DOUBLE}, #{strGroupName,jdbcType=VARCHAR}, 
+      #{dataReadTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ups.demo.pojo.Battery" >
+    insert into t_battery
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intBatteryId != null" >
+        int_battery_id,
+      </if>
+      <if test="doubleVoltage != null" >
+        double_voltage,
+      </if>
+      <if test="doubleTemprature != null" >
+        double_temprature,
+      </if>
+      <if test="doubleResistan != null" >
+        double_resistan,
+      </if>
+      <if test="doubleCapacity != null" >
+        double_capacity,
+      </if>
+      <if test="strGroupName != null" >
+        str_group_name,
+      </if>
+      <if test="dataReadTime != null" >
+        data_read_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intBatteryId != null" >
+        #{intBatteryId,jdbcType=INTEGER},
+      </if>
+      <if test="doubleVoltage != null" >
+        #{doubleVoltage,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleTemprature != null" >
+        #{doubleTemprature,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleResistan != null" >
+        #{doubleResistan,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleCapacity != null" >
+        #{doubleCapacity,jdbcType=DOUBLE},
+      </if>
+      <if test="strGroupName != null" >
+        #{strGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataReadTime != null" >
+        #{dataReadTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ups.demo.pojo.Battery" >
+    update t_battery
+    <set >
+      <if test="doubleVoltage != null" >
+        double_voltage = #{doubleVoltage,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleTemprature != null" >
+        double_temprature = #{doubleTemprature,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleResistan != null" >
+        double_resistan = #{doubleResistan,jdbcType=DOUBLE},
+      </if>
+      <if test="doubleCapacity != null" >
+        double_capacity = #{doubleCapacity,jdbcType=DOUBLE},
+      </if>
+      <if test="strGroupName != null" >
+        str_group_name = #{strGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataReadTime != null" >
+        data_read_time = #{dataReadTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where int_battery_id = #{intBatteryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ups.demo.pojo.Battery" >
+    update t_battery
+    set double_voltage = #{doubleVoltage,jdbcType=DOUBLE},
+      double_temprature = #{doubleTemprature,jdbcType=DOUBLE},
+      double_resistan = #{doubleResistan,jdbcType=DOUBLE},
+      double_capacity = #{doubleCapacity,jdbcType=DOUBLE},
+      str_group_name = #{strGroupName,jdbcType=VARCHAR},
+      data_read_time = #{dataReadTime,jdbcType=TIMESTAMP}
+    where int_battery_id = #{intBatteryId,jdbcType=INTEGER}
+  </update>
+</mapper>

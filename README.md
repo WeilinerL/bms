@@ -1,2 +1,2 @@
-# ups
-UPS project team backend SSM architecture
+# bms
+BMS project team backend SSM architecture

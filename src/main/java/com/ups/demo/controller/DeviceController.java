@@ -1,6 +1,5 @@
 package com.ups.demo.controller;
 
-import com.ups.demo.pojo.DeviceListHome;
 import com.ups.demo.service.DeviceService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,16 +19,16 @@ public class DeviceController {
 
     private final static Log log = LogFactory.getLog(DeviceController.class);
 
-    //注册用户都有资格访问所有设备
-    @GetMapping(value = "device_list")
-    @PreAuthorize("hasAnyRole('customer','admin')")
-    public List<DeviceListHome> getAll() {
-        if (log.isTraceEnabled()) {
-            log.trace("get all devices");
-        }
-//        return deviceService.getAllDevice();
-        return null;
-    }
+//    //注册用户都有资格访问所有设备
+//    @GetMapping(value = "device_list")
+//    @PreAuthorize("hasAnyRole('customer','admin')")
+//    public List<DeviceListHome> getAll() {
+//        if (log.isTraceEnabled()) {
+//            log.trace("get all devices");
+//        }
+////        return deviceService.getAllDevice();
+//        return null;
+//    }
 
     @GetMapping(value = "device_group")
     @PreAuthorize("hasAnyRole('customer','admin')")

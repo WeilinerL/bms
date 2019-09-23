@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ups.demo.dao.ErrorLogMapper" >
+  <resultMap id="BaseResultMap" type="com.ups.demo.pojo.ErrorLog" >
+    <id column="int_id" property="intId" jdbcType="INTEGER" />
+    <result column="int_device_id" property="intDeviceId" jdbcType="VARCHAR" />
+    <result column="str_content" property="strContent" jdbcType="VARCHAR" />
+    <result column="date_log_date" property="dateLogDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_id, int_device_id, str_content, date_log_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_error_log
+    where int_id = #{intId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_error_log
+    where int_id = #{intId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ups.demo.pojo.ErrorLog" >
+    insert into t_error_log (int_id, int_device_id, str_content, 
+      date_log_date)
+    values (#{intId,jdbcType=INTEGER}, #{intDeviceId,jdbcType=VARCHAR}, #{strContent,jdbcType=VARCHAR}, 
+      #{dateLogDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ups.demo.pojo.ErrorLog" >
+    insert into t_error_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intId != null" >
+        int_id,
+      </if>
+      <if test="intDeviceId != null" >
+        int_device_id,
+      </if>
+      <if test="strContent != null" >
+        str_content,
+      </if>
+      <if test="dateLogDate != null" >
+        date_log_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intId != null" >
+        #{intId,jdbcType=INTEGER},
+      </if>
+      <if test="intDeviceId != null" >
+        #{intDeviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="strContent != null" >
+        #{strContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dateLogDate != null" >
+        #{dateLogDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ups.demo.pojo.ErrorLog" >
+    update t_error_log
+    <set >
+      <if test="intDeviceId != null" >
+        int_device_id = #{intDeviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="strContent != null" >
+        str_content = #{strContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dateLogDate != null" >
+        date_log_date = #{dateLogDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where int_id = #{intId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ups.demo.pojo.ErrorLog" >
+    update t_error_log
+    set int_device_id = #{intDeviceId,jdbcType=VARCHAR},
+      str_content = #{strContent,jdbcType=VARCHAR},
+      date_log_date = #{dateLogDate,jdbcType=TIMESTAMP}
+    where int_id = #{intId,jdbcType=INTEGER}
+  </update>
+</mapper>

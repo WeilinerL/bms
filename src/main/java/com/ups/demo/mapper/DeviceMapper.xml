@@ -3,16 +3,17 @@
 <mapper namespace="com.ups.demo.dao.DeviceMapper" >
   <resultMap id="BaseResultMap" type="com.ups.demo.pojo.Device" >
     <id column="int_device_id" property="intDeviceId" jdbcType="INTEGER" />
-    <result column="int_core_id" property="intCoreId" jdbcType="INTEGER" />
+    <result column="str_code_id" property="strCodeId" jdbcType="VARCHAR" />
     <result column="int_user_id" property="intUserId" jdbcType="INTEGER" />
-    <result column="str_shared_user_id" property="strSharedUserId" jdbcType="VARCHAR" />
     <result column="str_device_name" property="strDeviceName" jdbcType="VARCHAR" />
     <result column="str_device_address" property="strDeviceAddress" jdbcType="VARCHAR" />
-    <result column="str_code_id" property="strCodeId" jdbcType="VARCHAR" />
+    <result column="int_detail_id" property="intDetailId" jdbcType="INTEGER" />
+    <result column="int_group_id" property="intGroupId" jdbcType="INTEGER" />
+    <result column="str_status" property="strStatus" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    int_device_id, int_core_id, int_user_id, str_shared_user_id, str_device_name, str_device_address, 
-    str_code_id
+    int_device_id, str_code_id, int_user_id, str_device_name, str_device_address, int_detail_id, 
+    int_group_id, str_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -25,12 +26,12 @@
     where int_device_id = #{intDeviceId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ups.demo.pojo.Device" >
-    insert into t_device (int_device_id, int_core_id, int_user_id, 
-      str_shared_user_id, str_device_name, str_device_address, 
-      str_code_id)
-    values (#{intDeviceId,jdbcType=INTEGER}, #{intCoreId,jdbcType=INTEGER}, #{intUserId,jdbcType=INTEGER}, 
-      #{strSharedUserId,jdbcType=VARCHAR}, #{strDeviceName,jdbcType=VARCHAR}, #{strDeviceAddress,jdbcType=VARCHAR}, 
-      #{strCodeId,jdbcType=VARCHAR})
+    insert into t_device (int_device_id, str_code_id, int_user_id, 
+      str_device_name, str_device_address, int_detail_id, 
+      int_group_id, str_status)
+    values (#{intDeviceId,jdbcType=INTEGER}, #{strCodeId,jdbcType=VARCHAR}, #{intUserId,jdbcType=INTEGER}, 
+      #{strDeviceName,jdbcType=VARCHAR}, #{strDeviceAddress,jdbcType=VARCHAR}, #{intDetailId,jdbcType=INTEGER}, 
+      #{intGroupId,jdbcType=INTEGER}, #{strStatus,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ups.demo.pojo.Device" >
     insert into t_device
@@ -38,14 +39,11 @@
       <if test="intDeviceId != null" >
         int_device_id,
       </if>
-      <if test="intCoreId != null" >
-        int_core_id,
+      <if test="strCodeId != null" >
+        str_code_id,
       </if>
       <if test="intUserId != null" >
         int_user_id,
-      </if>
-      <if test="strSharedUserId != null" >
-        str_shared_user_id,
       </if>
       <if test="strDeviceName != null" >
         str_device_name,
@@ -53,22 +51,25 @@
       <if test="strDeviceAddress != null" >
         str_device_address,
       </if>
-      <if test="strCodeId != null" >
-        str_code_id,
+      <if test="intDetailId != null" >
+        int_detail_id,
+      </if>
+      <if test="intGroupId != null" >
+        int_group_id,
+      </if>
+      <if test="strStatus != null" >
+        str_status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="intDeviceId != null" >
         #{intDeviceId,jdbcType=INTEGER},
       </if>
-      <if test="intCoreId != null" >
-        #{intCoreId,jdbcType=INTEGER},
+      <if test="strCodeId != null" >
+        #{strCodeId,jdbcType=VARCHAR},
       </if>
       <if test="intUserId != null" >
         #{intUserId,jdbcType=INTEGER},
-      </if>
-      <if test="strSharedUserId != null" >
-        #{strSharedUserId,jdbcType=VARCHAR},
       </if>
       <if test="strDeviceName != null" >
         #{strDeviceName,jdbcType=VARCHAR},
@@ -76,22 +77,25 @@
       <if test="strDeviceAddress != null" >
         #{strDeviceAddress,jdbcType=VARCHAR},
       </if>
-      <if test="strCodeId != null" >
-        #{strCodeId,jdbcType=VARCHAR},
+      <if test="intDetailId != null" >
+        #{intDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="intGroupId != null" >
+        #{intGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="strStatus != null" >
+        #{strStatus,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ups.demo.pojo.Device" >
     update t_device
     <set >
-      <if test="intCoreId != null" >
-        int_core_id = #{intCoreId,jdbcType=INTEGER},
+      <if test="strCodeId != null" >
+        str_code_id = #{strCodeId,jdbcType=VARCHAR},
       </if>
       <if test="intUserId != null" >
         int_user_id = #{intUserId,jdbcType=INTEGER},
-      </if>
-      <if test="strSharedUserId != null" >
-        str_shared_user_id = #{strSharedUserId,jdbcType=VARCHAR},
       </if>
       <if test="strDeviceName != null" >
         str_device_name = #{strDeviceName,jdbcType=VARCHAR},
@@ -99,20 +103,27 @@
       <if test="strDeviceAddress != null" >
         str_device_address = #{strDeviceAddress,jdbcType=VARCHAR},
       </if>
-      <if test="strCodeId != null" >
-        str_code_id = #{strCodeId,jdbcType=VARCHAR},
+      <if test="intDetailId != null" >
+        int_detail_id = #{intDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="intGroupId != null" >
+        int_group_id = #{intGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="strStatus != null" >
+        str_status = #{strStatus,jdbcType=VARCHAR},
       </if>
     </set>
     where int_device_id = #{intDeviceId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ups.demo.pojo.Device" >
     update t_device
-    set int_core_id = #{intCoreId,jdbcType=INTEGER},
+    set str_code_id = #{strCodeId,jdbcType=VARCHAR},
       int_user_id = #{intUserId,jdbcType=INTEGER},
-      str_shared_user_id = #{strSharedUserId,jdbcType=VARCHAR},
       str_device_name = #{strDeviceName,jdbcType=VARCHAR},
       str_device_address = #{strDeviceAddress,jdbcType=VARCHAR},
-      str_code_id = #{strCodeId,jdbcType=VARCHAR}
+      int_detail_id = #{intDetailId,jdbcType=INTEGER},
+      int_group_id = #{intGroupId,jdbcType=INTEGER},
+      str_status = #{strStatus,jdbcType=VARCHAR}
     where int_device_id = #{intDeviceId,jdbcType=INTEGER}
   </update>
 </mapper>

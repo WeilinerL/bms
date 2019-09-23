@@ -6,17 +6,19 @@ import org.springframework.stereotype.Component;
 public class Device {
     private Integer intDeviceId;
 
-    private Integer intCoreId;
+    private String strCodeId;
 
     private Integer intUserId;
-
-    private String strSharedUserId;
 
     private String strDeviceName;
 
     private String strDeviceAddress;
 
-    private String strCodeId;
+    private Integer intDetailId;
+
+    private Integer intGroupId;
+
+    private String strStatus;
 
     public Integer getIntDeviceId() {
         return intDeviceId;
@@ -26,12 +28,12 @@ public class Device {
         this.intDeviceId = intDeviceId;
     }
 
-    public Integer getIntCoreId() {
-        return intCoreId;
+    public String getStrCodeId() {
+        return strCodeId;
     }
 
-    public void setIntCoreId(Integer intCoreId) {
-        this.intCoreId = intCoreId;
+    public void setStrCodeId(String strCodeId) {
+        this.strCodeId = strCodeId == null ? null : strCodeId.trim();
     }
 
     public Integer getIntUserId() {
@@ -40,14 +42,6 @@ public class Device {
 
     public void setIntUserId(Integer intUserId) {
         this.intUserId = intUserId;
-    }
-
-    public String getStrSharedUserId() {
-        return strSharedUserId;
-    }
-
-    public void setStrSharedUserId(String strSharedUserId) {
-        this.strSharedUserId = strSharedUserId == null ? null : strSharedUserId.trim();
     }
 
     public String getStrDeviceName() {
@@ -66,11 +60,27 @@ public class Device {
         this.strDeviceAddress = strDeviceAddress == null ? null : strDeviceAddress.trim();
     }
 
-    public String getStrCodeId() {
-        return strCodeId;
+    public Integer getIntDetailId() {
+        return intDetailId;
     }
 
-    public void setStrCodeId(String strCodeId) {
-        this.strCodeId = strCodeId == null ? null : strCodeId.trim();
+    public void setIntDetailId(Integer intDetailId) {
+        this.intDetailId = intDetailId;
+    }
+
+    public Integer getIntGroupId() {
+        return intGroupId;
+    }
+
+    public void setIntGroupId(Integer intGroupId) {
+        this.intGroupId = intGroupId;
+    }
+
+    public String getStrStatus() {
+        return strStatus;
+    }
+
+    public void setStrStatus(String strStatus) {
+        this.strStatus = strStatus == null ? null : strStatus.trim();
     }
 }

@@ -11,10 +11,11 @@
     <result column="str_address" property="strAddress" jdbcType="VARCHAR" />
     <result column="str_email" property="strEmail" jdbcType="VARCHAR" />
     <result column="str_user_type" property="strUserType" jdbcType="VARCHAR" />
+    <result column="str_open_id" property="strOpenId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     int_user_id, str_tel_number, str_password, str_nickname, str_sex, str_real_name, 
-    str_address, str_email, str_user_type
+    str_address, str_email, str_user_type, str_open_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -29,12 +30,12 @@
   <insert id="insert" parameterType="com.ups.demo.pojo.User" >
     insert into t_user (int_user_id, str_tel_number, str_password, 
       str_nickname, str_sex, str_real_name, 
-      str_address, str_email, str_user_type
-      )
+      str_address, str_email, str_user_type, 
+      str_open_id)
     values (#{intUserId,jdbcType=INTEGER}, #{strTelNumber,jdbcType=VARCHAR}, #{strPassword,jdbcType=VARCHAR}, 
       #{strNickname,jdbcType=VARCHAR}, #{strSex,jdbcType=VARCHAR}, #{strRealName,jdbcType=VARCHAR}, 
-      #{strAddress,jdbcType=VARCHAR}, #{strEmail,jdbcType=VARCHAR}, #{strUserType,jdbcType=VARCHAR}
-      )
+      #{strAddress,jdbcType=VARCHAR}, #{strEmail,jdbcType=VARCHAR}, #{strUserType,jdbcType=VARCHAR}, 
+      #{strOpenId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ups.demo.pojo.User" >
     insert into t_user
@@ -66,6 +67,9 @@
       <if test="strUserType != null" >
         str_user_type,
       </if>
+      <if test="strOpenId != null" >
+        str_open_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="intUserId != null" >
@@ -94,6 +98,9 @@
       </if>
       <if test="strUserType != null" >
         #{strUserType,jdbcType=VARCHAR},
+      </if>
+      <if test="strOpenId != null" >
+        #{strOpenId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -124,6 +131,9 @@
       <if test="strUserType != null" >
         str_user_type = #{strUserType,jdbcType=VARCHAR},
       </if>
+      <if test="strOpenId != null" >
+        str_open_id = #{strOpenId,jdbcType=VARCHAR},
+      </if>
     </set>
     where int_user_id = #{intUserId,jdbcType=INTEGER}
   </update>
@@ -136,7 +146,8 @@
       str_real_name = #{strRealName,jdbcType=VARCHAR},
       str_address = #{strAddress,jdbcType=VARCHAR},
       str_email = #{strEmail,jdbcType=VARCHAR},
-      str_user_type = #{strUserType,jdbcType=VARCHAR}
+      str_user_type = #{strUserType,jdbcType=VARCHAR},
+      str_open_id = #{strOpenId,jdbcType=VARCHAR}
     where int_user_id = #{intUserId,jdbcType=INTEGER}
   </update>
 </mapper>

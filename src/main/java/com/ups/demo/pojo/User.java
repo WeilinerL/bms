@@ -22,6 +22,8 @@ public class User {
 
     private String strUserType;
 
+    private String strOpenId;
+
     public Integer getIntUserId() {
         return intUserId;
     }
@@ -92,5 +94,13 @@ public class User {
 
     public void setStrUserType(String strUserType) {
         this.strUserType = strUserType == null ? null : strUserType.trim();
+    }
+
+    public String getStrOpenId() {
+        return strOpenId;
+    }
+
+    public void setStrOpenId(String strOpenId) {
+        this.strOpenId = strOpenId == null ? null : strOpenId.trim();
     }
 }

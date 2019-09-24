@@ -11,6 +11,9 @@ public interface UserMapper {
     @Select("select * from t_user where str_tel_number = #{telNumber}")
     User selectByTelNumber(String telNumber);
 
+    @Select("select int_user_id from t_user where str_tel_number = #{telNumber}")
+    String selectUserIdByTel(String telNumber);
+
     @Select("select str_user_type from t_user where str_open_id = #{openID}")
     String selectByOpenId(String openId);
 

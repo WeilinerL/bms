@@ -1,9 +1,13 @@
 package com.ups.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.DeviceGroupService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -74,5 +78,51 @@ public class DeviceGroupController {
 //            return result;
 //        }
 //    }
+
+    /**
+     * 获取所有分组信息(只包含分组名及其id)
+     * @param JSONCONTENT {userName: String}
+     * @return {code: int, data: [{intGroupId: id, strGroupName: String}]}
+     */
+
+    @GetMapping(value = "get_all_device_group")
+    public ResponseEntity<Map<String, Object>> getAllDeviceGroup(@RequestBody String JSONCONTENT) {
+        HashMap<String, Object> result = new HashMap<>();
+        if(JSONCONTENT.contains("userName")) {
+            JSONObject json = JSON.parseObject(JSONCONTENT);
+            String userName = json.getString("userName");
+            if(log.isTraceEnabled()) {
+                log.trace("获取所有分组(不包含设备) 用户名为: " + userName);
+            }
+            result.put("code",1);
+            result.put("data",deviceGroupService.getAllGroupName(userName));
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }else {
+            result.put("code",0);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    @PostMapping(value = "add_device")
+    public ResponseEntity<Map<String, Object>> addDevice(@RequestBody String JSONCONTENT) {
+        HashMap<String, Object> result = new HashMap<>();
+        if(JSONCONTENT.contains("groupID") && JSONCONTENT.contains("deviceList")) {
+            JSONObject json = JSON.parseObject(JSONCONTENT);
+            int groupId = json.getInteger("groupID");
+            List<JSONObject> deviceIds = (List<JSONObject>) json.get("deviceList");
+            if(log.isTraceEnabled()) {
+                log.trace("往分组中添加设备表 分组id: " + groupId + "添加的设备有 " + deviceIds.size() + " 个");
+            }
+            int insertSuccess = deviceGroupService.addDevice(groupId,deviceIds);
+            if(log.isTraceEnabled()) {
+                log.trace("添加设备成功了 " + insertSuccess + " 个");
+            }
+            result.put("code",1);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }else {
+            result.put("code",0);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
 
 }

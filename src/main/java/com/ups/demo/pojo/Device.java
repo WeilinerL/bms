@@ -8,7 +8,7 @@ public class Device {
 
     private String strCodeId;
 
-    private Integer intUserId;
+    private String strUserTel;
 
     private String strDeviceName;
 
@@ -36,12 +36,12 @@ public class Device {
         this.strCodeId = strCodeId == null ? null : strCodeId.trim();
     }
 
-    public Integer getIntUserId() {
-        return intUserId;
+    public String getStrUserTel() {
+        return strUserTel;
     }
 
-    public void setIntUserId(Integer intUserId) {
-        this.intUserId = intUserId;
+    public void setStrUserTel(String strUserTel) {
+        this.strUserTel = strUserTel == null ? null : strUserTel.trim();
     }
 
     public String getStrDeviceName() {

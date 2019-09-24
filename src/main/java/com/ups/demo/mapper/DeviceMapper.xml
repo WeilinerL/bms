@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.ups.demo.pojo.Device" >
     <id column="int_device_id" property="intDeviceId" jdbcType="INTEGER" />
     <result column="str_code_id" property="strCodeId" jdbcType="VARCHAR" />
-    <result column="int_user_id" property="intUserId" jdbcType="INTEGER" />
+    <result column="str_user_tel" property="strUserTel" jdbcType="VARCHAR" />
     <result column="str_device_name" property="strDeviceName" jdbcType="VARCHAR" />
     <result column="str_device_address" property="strDeviceAddress" jdbcType="VARCHAR" />
     <result column="int_detail_id" property="intDetailId" jdbcType="INTEGER" />
@@ -12,7 +12,7 @@
     <result column="str_status" property="strStatus" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    int_device_id, str_code_id, int_user_id, str_device_name, str_device_address, int_detail_id, 
+    int_device_id, str_code_id, str_user_tel, str_device_name, str_device_address, int_detail_id, 
     int_group_id, str_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -26,10 +26,10 @@
     where int_device_id = #{intDeviceId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ups.demo.pojo.Device" >
-    insert into t_device (int_device_id, str_code_id, int_user_id, 
+    insert into t_device (int_device_id, str_code_id, str_user_tel, 
       str_device_name, str_device_address, int_detail_id, 
       int_group_id, str_status)
-    values (#{intDeviceId,jdbcType=INTEGER}, #{strCodeId,jdbcType=VARCHAR}, #{intUserId,jdbcType=INTEGER}, 
+    values (#{intDeviceId,jdbcType=INTEGER}, #{strCodeId,jdbcType=VARCHAR}, #{strUserTel,jdbcType=VARCHAR}, 
       #{strDeviceName,jdbcType=VARCHAR}, #{strDeviceAddress,jdbcType=VARCHAR}, #{intDetailId,jdbcType=INTEGER}, 
       #{intGroupId,jdbcType=INTEGER}, #{strStatus,jdbcType=VARCHAR})
   </insert>
@@ -42,8 +42,8 @@
       <if test="strCodeId != null" >
         str_code_id,
       </if>
-      <if test="intUserId != null" >
-        int_user_id,
+      <if test="strUserTel != null" >
+        str_user_tel,
       </if>
       <if test="strDeviceName != null" >
         str_device_name,
@@ -68,8 +68,8 @@
       <if test="strCodeId != null" >
         #{strCodeId,jdbcType=VARCHAR},
       </if>
-      <if test="intUserId != null" >
-        #{intUserId,jdbcType=INTEGER},
+      <if test="strUserTel != null" >
+        #{strUserTel,jdbcType=VARCHAR},
       </if>
       <if test="strDeviceName != null" >
         #{strDeviceName,jdbcType=VARCHAR},
@@ -94,8 +94,8 @@
       <if test="strCodeId != null" >
         str_code_id = #{strCodeId,jdbcType=VARCHAR},
       </if>
-      <if test="intUserId != null" >
-        int_user_id = #{intUserId,jdbcType=INTEGER},
+      <if test="strUserTel != null" >
+        str_user_tel = #{strUserTel,jdbcType=VARCHAR},
       </if>
       <if test="strDeviceName != null" >
         str_device_name = #{strDeviceName,jdbcType=VARCHAR},
@@ -118,7 +118,7 @@
   <update id="updateByPrimaryKey" parameterType="com.ups.demo.pojo.Device" >
     update t_device
     set str_code_id = #{strCodeId,jdbcType=VARCHAR},
-      int_user_id = #{intUserId,jdbcType=INTEGER},
+      str_user_tel = #{strUserTel,jdbcType=VARCHAR},
       str_device_name = #{strDeviceName,jdbcType=VARCHAR},
       str_device_address = #{strDeviceAddress,jdbcType=VARCHAR},
       int_detail_id = #{intDetailId,jdbcType=INTEGER},

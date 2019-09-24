@@ -8,7 +8,7 @@ public class DeviceShare {
 
     private Integer intDeviceId;
 
-    private Integer intSharedUserId;
+    private String strSharedUserTel;
 
     public Integer getIntSharedId() {
         return intSharedId;
@@ -26,11 +26,11 @@ public class DeviceShare {
         this.intDeviceId = intDeviceId;
     }
 
-    public Integer getIntSharedUserId() {
-        return intSharedUserId;
+    public String getStrSharedUserTel() {
+        return strSharedUserTel;
     }
 
-    public void setIntSharedUserId(Integer intSharedUserId) {
-        this.intSharedUserId = intSharedUserId;
+    public void setStrSharedUserTel(String strSharedUserTel) {
+        this.strSharedUserTel = strSharedUserTel == null ? null : strSharedUserTel.trim();
     }
 }

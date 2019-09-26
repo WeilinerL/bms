@@ -10,6 +10,8 @@ public class DeviceShare {
 
     private String strSharedUserTel;
 
+    private Integer intGroupId;
+
     public Integer getIntSharedId() {
         return intSharedId;
     }
@@ -32,5 +34,13 @@ public class DeviceShare {
 
     public void setStrSharedUserTel(String strSharedUserTel) {
         this.strSharedUserTel = strSharedUserTel == null ? null : strSharedUserTel.trim();
+    }
+
+    public Integer getIntGroupId() {
+        return intGroupId;
+    }
+
+    public void setIntGroupId(Integer intGroupId) {
+        this.intGroupId = intGroupId;
     }
 }

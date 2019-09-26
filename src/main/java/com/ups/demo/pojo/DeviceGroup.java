@@ -8,6 +8,8 @@ public class DeviceGroup {
 
     private String strGroupName;
 
+    private String strUserName;
+
     public Integer getIntGroupId() {
         return intGroupId;
     }
@@ -22,5 +24,13 @@ public class DeviceGroup {
 
     public void setStrGroupName(String strGroupName) {
         this.strGroupName = strGroupName == null ? null : strGroupName.trim();
+    }
+
+    public String getStrUserName() {
+        return strUserName;
+    }
+
+    public void setStrUserName(String strUserName) {
+        this.strUserName = strUserName == null ? null : strUserName.trim();
     }
 }

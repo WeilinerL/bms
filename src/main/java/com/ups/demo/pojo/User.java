@@ -12,7 +12,7 @@ public class User {
 
     private String strNickname;
 
-    private String strSex;
+    private String strProfession;
 
     private String strRealName;
 
@@ -56,12 +56,12 @@ public class User {
         this.strNickname = strNickname == null ? null : strNickname.trim();
     }
 
-    public String getStrSex() {
-        return strSex;
+    public String getStrProfession() {
+        return strProfession;
     }
 
-    public void setStrSex(String strSex) {
-        this.strSex = strSex == null ? null : strSex.trim();
+    public void setStrProfession(String strProfession) {
+        this.strProfession = strProfession == null ? null : strProfession.trim();
     }
 
     public String getStrRealName() {

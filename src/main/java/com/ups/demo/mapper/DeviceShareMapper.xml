@@ -5,9 +5,10 @@
     <id column="int_shared_id" property="intSharedId" jdbcType="INTEGER" />
     <result column="int_device_id" property="intDeviceId" jdbcType="INTEGER" />
     <result column="str_shared_user_tel" property="strSharedUserTel" jdbcType="VARCHAR" />
+    <result column="int_group_id" property="intGroupId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    int_shared_id, int_device_id, str_shared_user_tel
+    int_shared_id, int_device_id, str_shared_user_tel, int_group_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,10 +21,10 @@
     where int_shared_id = #{intSharedId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ups.demo.pojo.DeviceShare" >
-    insert into t_device_share (int_shared_id, int_device_id, str_shared_user_tel
-      )
-    values (#{intSharedId,jdbcType=INTEGER}, #{intDeviceId,jdbcType=INTEGER}, #{strSharedUserTel,jdbcType=VARCHAR}
-      )
+    insert into t_device_share (int_shared_id, int_device_id, str_shared_user_tel, 
+      int_group_id)
+    values (#{intSharedId,jdbcType=INTEGER}, #{intDeviceId,jdbcType=INTEGER}, #{strSharedUserTel,jdbcType=VARCHAR}, 
+      #{intGroupId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.ups.demo.pojo.DeviceShare" >
     insert into t_device_share
@@ -37,6 +38,9 @@
       <if test="strSharedUserTel != null" >
         str_shared_user_tel,
       </if>
+      <if test="intGroupId != null" >
+        int_group_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="intSharedId != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="strSharedUserTel != null" >
         #{strSharedUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="intGroupId != null" >
+        #{intGroupId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,17 @@
       <if test="strSharedUserTel != null" >
         str_shared_user_tel = #{strSharedUserTel,jdbcType=VARCHAR},
       </if>
+      <if test="intGroupId != null" >
+        int_group_id = #{intGroupId,jdbcType=INTEGER},
+      </if>
     </set>
     where int_shared_id = #{intSharedId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ups.demo.pojo.DeviceShare" >
     update t_device_share
     set int_device_id = #{intDeviceId,jdbcType=INTEGER},
-      str_shared_user_tel = #{strSharedUserTel,jdbcType=VARCHAR}
+      str_shared_user_tel = #{strSharedUserTel,jdbcType=VARCHAR},
+      int_group_id = #{intGroupId,jdbcType=INTEGER}
     where int_shared_id = #{intSharedId,jdbcType=INTEGER}
   </update>
 </mapper>

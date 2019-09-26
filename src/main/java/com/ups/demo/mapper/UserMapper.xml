@@ -6,7 +6,7 @@
     <result column="str_tel_number" property="strTelNumber" jdbcType="VARCHAR" />
     <result column="str_password" property="strPassword" jdbcType="VARCHAR" />
     <result column="str_nickname" property="strNickname" jdbcType="VARCHAR" />
-    <result column="str_sex" property="strSex" jdbcType="VARCHAR" />
+    <result column="str_profession" property="strProfession" jdbcType="VARCHAR" />
     <result column="str_real_name" property="strRealName" jdbcType="VARCHAR" />
     <result column="str_address" property="strAddress" jdbcType="VARCHAR" />
     <result column="str_email" property="strEmail" jdbcType="VARCHAR" />
@@ -14,7 +14,7 @@
     <result column="str_open_id" property="strOpenId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    int_user_id, str_tel_number, str_password, str_nickname, str_sex, str_real_name, 
+    int_user_id, str_tel_number, str_password, str_nickname, str_profession, str_real_name, 
     str_address, str_email, str_user_type, str_open_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -29,11 +29,11 @@
   </delete>
   <insert id="insert" parameterType="com.ups.demo.pojo.User" >
     insert into t_user (int_user_id, str_tel_number, str_password, 
-      str_nickname, str_sex, str_real_name, 
+      str_nickname, str_profession, str_real_name, 
       str_address, str_email, str_user_type, 
       str_open_id)
     values (#{intUserId,jdbcType=INTEGER}, #{strTelNumber,jdbcType=VARCHAR}, #{strPassword,jdbcType=VARCHAR}, 
-      #{strNickname,jdbcType=VARCHAR}, #{strSex,jdbcType=VARCHAR}, #{strRealName,jdbcType=VARCHAR}, 
+      #{strNickname,jdbcType=VARCHAR}, #{strProfession,jdbcType=VARCHAR}, #{strRealName,jdbcType=VARCHAR}, 
       #{strAddress,jdbcType=VARCHAR}, #{strEmail,jdbcType=VARCHAR}, #{strUserType,jdbcType=VARCHAR}, 
       #{strOpenId,jdbcType=VARCHAR})
   </insert>
@@ -52,8 +52,8 @@
       <if test="strNickname != null" >
         str_nickname,
       </if>
-      <if test="strSex != null" >
-        str_sex,
+      <if test="strProfession != null" >
+        str_profession,
       </if>
       <if test="strRealName != null" >
         str_real_name,
@@ -84,8 +84,8 @@
       <if test="strNickname != null" >
         #{strNickname,jdbcType=VARCHAR},
       </if>
-      <if test="strSex != null" >
-        #{strSex,jdbcType=VARCHAR},
+      <if test="strProfession != null" >
+        #{strProfession,jdbcType=VARCHAR},
       </if>
       <if test="strRealName != null" >
         #{strRealName,jdbcType=VARCHAR},
@@ -116,8 +116,8 @@
       <if test="strNickname != null" >
         str_nickname = #{strNickname,jdbcType=VARCHAR},
       </if>
-      <if test="strSex != null" >
-        str_sex = #{strSex,jdbcType=VARCHAR},
+      <if test="strProfession != null" >
+        str_profession = #{strProfession,jdbcType=VARCHAR},
       </if>
       <if test="strRealName != null" >
         str_real_name = #{strRealName,jdbcType=VARCHAR},
@@ -142,7 +142,7 @@
     set str_tel_number = #{strTelNumber,jdbcType=VARCHAR},
       str_password = #{strPassword,jdbcType=VARCHAR},
       str_nickname = #{strNickname,jdbcType=VARCHAR},
-      str_sex = #{strSex,jdbcType=VARCHAR},
+      str_profession = #{strProfession,jdbcType=VARCHAR},
       str_real_name = #{strRealName,jdbcType=VARCHAR},
       str_address = #{strAddress,jdbcType=VARCHAR},
       str_email = #{strEmail,jdbcType=VARCHAR},

@@ -17,6 +17,15 @@ public interface DeviceMapper {
     @Select("select str_user_tel from t_device where int_device_id = #{deviceId}")
     String selectUserTelByDeviceId(int deviceId);
 
+    @Select("select * from t_device where int_device_id = #{deviceId} and str_user_tel =#{userName}")
+    Device selectAllByDeviceIdAndUserTel(int deviceId, String userName);
+
+    @Select("select str_user_tel from t_device where str_code_id = #{deviceCode}")
+    String selectUserTelByDeviceCode(String deviceCode);
+
+    @Select("select str_device_address from t_device where int_device_id = #{deviceId}")
+    String selectDeviceAdressByDeviceId(int deviceId);
+
     @Select("select int_detail_id from t_device where int_device_id = #{deviceId}")
     int selectDetailIdByDeviceId(int deviceId);
 
@@ -33,7 +42,7 @@ public interface DeviceMapper {
     List<Integer> selectDeviceIdByUserName(String userName);
 
     @Select("select int_group_id from t_device where int_device_id = #{deviceId}")
-    int selectGroupIdByDeviceId(int deviceId);
+    Integer selectGroupIdByDeviceId(int deviceId);
 
     @Update("update t_device set int_group_id = #{groupId} where int_device_id = #{deviceId}")
     int updateGroupIdByDeviceId(int groupId, int deviceId);

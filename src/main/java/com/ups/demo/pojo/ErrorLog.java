@@ -1,5 +1,6 @@
 package com.ups.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public class ErrorLog {
 
     private String strContent;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dateLogDate;
 
     public Integer getIntId() {

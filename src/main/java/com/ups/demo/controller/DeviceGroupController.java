@@ -3,6 +3,7 @@ package com.ups.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.DeviceGroupService;
+import com.ups.demo.utils.JsonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class DeviceGroupController {
                 log.trace("获取所有分组(不包含设备) 用户名为: " + userName);
             }
             result.put("code",1);
-            result.put("data",deviceGroupService.getAllGroupName(userName));
+            result.put("data", JsonUtils.convert(deviceGroupService.getAllGroupName(userName).toString()));
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }else {
             result.put("code",0);
@@ -255,6 +256,12 @@ public class DeviceGroupController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
+
+    /**
+     * 添加分组
+     * @param JSONCONTENT {userName: String, newGroupName: String}
+     * @return {code: int}
+     */
 
     @PostMapping(value = "add_group")
     public ResponseEntity<Map<String, Object>> addGroup(@RequestBody String JSONCONTENT) {

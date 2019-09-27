@@ -124,12 +124,12 @@ public class DeviceGroupService {
 //        return groupList;
 //    }
 
+    @Transactional(readOnly = true)
     public List<JSONObject> getAllGroupName(String userName) {
         List<JSONObject> jsonObjects = deviceGroupMapper.selecGroupIdAndGroupNameByUserName(userName);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("int_group_id",0);
         jsonObject.put("str_group_name","默认分组");
-        jsonObjects.add(jsonObject);
         jsonObjects.add(jsonObject);
         return jsonObjects;
     }
@@ -209,6 +209,7 @@ public class DeviceGroupService {
         return 0;
     }
 
+    @Transactional(readOnly = true)
     public List<JSONObject> getAllDevice(String userName) {
         List<JSONObject> groupData = new ArrayList<>();
         List<JSONObject> deviceGroupList = getAllGroupName(userName);

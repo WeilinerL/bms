@@ -1,5 +1,6 @@
 package com.ups.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -7,6 +8,8 @@ import java.util.Date;
 @Component
 public class Battery {
     private Integer intBatteryId;
+
+    private Integer intDeviceId;
 
     private Double doubleVoltage;
 
@@ -16,8 +19,9 @@ public class Battery {
 
     private Double doubleCapacity;
 
-    private String strGroupName;
+    private Integer intBatteryPack;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dataReadTime;
 
     public Integer getIntBatteryId() {
@@ -26,6 +30,14 @@ public class Battery {
 
     public void setIntBatteryId(Integer intBatteryId) {
         this.intBatteryId = intBatteryId;
+    }
+
+    public Integer getIntDeviceId() {
+        return intDeviceId;
+    }
+
+    public void setIntDeviceId(Integer intDeviceId) {
+        this.intDeviceId = intDeviceId;
     }
 
     public Double getDoubleVoltage() {
@@ -60,12 +72,12 @@ public class Battery {
         this.doubleCapacity = doubleCapacity;
     }
 
-    public String getStrGroupName() {
-        return strGroupName;
+    public Integer getIntBatteryPack() {
+        return intBatteryPack;
     }
 
-    public void setStrGroupName(String strGroupName) {
-        this.strGroupName = strGroupName == null ? null : strGroupName.trim();
+    public void setIntBatteryPack(Integer intBatteryPack) {
+        this.intBatteryPack = intBatteryPack;
     }
 
     public Date getDataReadTime() {

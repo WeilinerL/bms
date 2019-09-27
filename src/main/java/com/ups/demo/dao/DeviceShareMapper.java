@@ -1,6 +1,7 @@
 package com.ups.demo.dao;
 
 import com.ups.demo.pojo.DeviceShare;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ public interface DeviceShareMapper {
 
     @Select("select str_user_tel from t_device_share where int_device_id = #{deviceId}")
     String selectUserTelByDeviceId(int deviceId);
+
+    @Select("select int_group_id from t_device_share where int_device_id = #{deviceId} and str_shared_user_tel = #{userName}")
+    Integer selectGroupIdByDeviceIdAndUserName(int deviceId, String userName);
 
     @Select("select int_device_id from t_device_share where int_group_id = #{groupId}")
     List<Integer> selectDeviceIdByGroupId(int groupId);
@@ -33,6 +37,9 @@ public interface DeviceShareMapper {
 
     @Update("update t_device_share set int_group_id = #{groupId} where int_device_id = #{deviceId} and str_shared_user_tel = #{userName}")
     int updateGroupIdByDeviceIdAndUserName(int groupId, int deviceId, String userName);
+
+    @Delete("delete from t_device_share where int_device_id = #{deviceId} and str_shared_user_tel = #{userName}")
+    int deleteByDeviceIdAndUserName(int deviceId, String userName);
 
     int deleteByPrimaryKey(Integer intSharedId);
 

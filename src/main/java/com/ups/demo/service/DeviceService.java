@@ -282,12 +282,12 @@ public class DeviceService {
             Device device = deviceMapper.selectAllByDeviceIdAndUserTel(deviceId,userName);
             if(device != null) {
                 modifyDeviceDetail(deviceBrand,deviceModel);
-                modifyCloudBoxCodeId(deviceCode);
                 device.setStrCodeId(deviceCode);
                 device.setStrDeviceName(deviceName);
                 device.setStrDeviceAddress(deviceAddress);
                 device.setIntDetailId(detailId);
-                return deviceMapper.updateByPrimaryKey(device);
+                deviceMapper.updateByPrimaryKey(device);
+                return modifyCloudBoxCodeId(deviceCode);
             }
             return 0;
         }else {

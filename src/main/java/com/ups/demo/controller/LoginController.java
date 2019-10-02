@@ -3,7 +3,6 @@ package com.ups.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.TokenService;
-import com.ups.demo.utils.AppRunningRecorder;
 import com.ups.demo.utils.WXAppletUserInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +43,6 @@ public class LoginController {
         HashMap<String, Object> result = new HashMap<>();
         String token = tokenService.loginCheck(userName, password,userAgent, userType);
         if(token == null) {
-            AppRunningRecorder.writeLog("PC端登录 token令牌为空");
             if(log.isTraceEnabled()) {
                 log.trace("PC端登录 token令牌为空");
             }
@@ -52,7 +50,6 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }else {
             String userName2 = tokenService.getUserFromToken(token).getUsername();
-            AppRunningRecorder.writeLog("PC端登录 用户名为"+ userName2 + "的用户成功登录");
             if(log.isTraceEnabled()) {
                 log.trace("PC端登录 用户名为"+ userName2 + "的用户成功登录");
             }
@@ -80,8 +77,6 @@ public class LoginController {
             String code = json.getString("code");
             if(code != null) {
                 JSONObject wxResult = WXAppletUserInfo.getSessionKeyAndOpenId(code);
-                AppRunningRecorder.writeLog("微信小程序端登录 登录码: " + code);
-                AppRunningRecorder.writeLog("获取微信端用于验证的 openid:  " + wxResult.getString("openid"));
                 if(log.isTraceEnabled()) {
                     log.trace("微信小程序端登录 登录码: " + code);
                     log.trace("微信验证端返回结果：" + wxResult);
@@ -94,7 +89,6 @@ public class LoginController {
                 result.put("data",data);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else {
-                AppRunningRecorder.writeLog("微信小程序端登录 登录码为空");
                 if(log.isTraceEnabled()) {
                     log.trace("微信小程序端登录 登录码为空");
                 }
@@ -122,8 +116,6 @@ public class LoginController {
             String passWord = json.getString("password");
             if(code != null && userName != null && passWord != null) {
                 JSONObject wxResult = WXAppletUserInfo.getSessionKeyAndOpenId(code);
-                AppRunningRecorder.writeLog("微信小程序端绑定 用户名: " + userName + " code: " + code);
-                AppRunningRecorder.writeLog("获取微信端用于验证的 openID: " + wxResult.getString("openid"));
                 if(log.isTraceEnabled()) {
                     log.trace("微信小程序端绑定 用户名: " + userName + " code: " + code);
                     log.trace("微信验证端返回结果：" + wxResult);
@@ -137,7 +129,6 @@ public class LoginController {
                     result.put("data",data);
                     return ResponseEntity.status(HttpStatus.OK).body(result);
                 }else {
-                    AppRunningRecorder.writeLog("微信小程序端登录 密码错误");
                     if(log.isTraceEnabled()) {
                         log.trace("微信小程序端登录 密码错误");
                     }
@@ -145,7 +136,6 @@ public class LoginController {
                     return ResponseEntity.status(HttpStatus.OK).body(result);
                 }
             }else {
-                AppRunningRecorder.writeLog("微信小程序端登录 有参数为空");
                 if(log.isTraceEnabled()) {
                     log.trace("微信小程序端登录 有参数为空");
                 }
@@ -167,10 +157,7 @@ public class LoginController {
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             token = requestHeader.substring(7);
             String userName = tokenService.getUserFromToken(token).getUsername();
-            AppRunningRecorder.writeLog("will delete token : " + token);
-            AppRunningRecorder.writeLog("注销用户: " + userName);
             if(tokenService.getUserFromToken(token) != null) {
-                AppRunningRecorder.writeLog("PC端注销成功!");
                 if(log.isTraceEnabled()) {
                     log.trace("will delete token : " + token);
                     log.trace("注销用户: " + userName);
@@ -179,7 +166,6 @@ public class LoginController {
                 tokenService.logout(token);
                 return result;
             } else {
-                AppRunningRecorder.writeLog("注销失败!此用户登录信息已失效!");
                 result.put("status","fail");
                 result.put("注销失败","此用户登录信息已失效!");
                 return result;
@@ -199,16 +185,13 @@ public class LoginController {
         String token = userInfo.get("token");
 
         if(userName != null && token != null) {
-            AppRunningRecorder.writeLog("检查用户的token: " + userInfo);
             if(log.isTraceEnabled()) {
                 log.trace("检查用户的token: " + userInfo);
             }
             if(tokenService.tokenCheck(userName,token)) {
-                AppRunningRecorder.writeLog("验证成功!");
                 result.put("result","success");
                 return result;
             }
-            AppRunningRecorder.writeLog("验证失败!");
             result.put("result", "fail");
             return result;
         }

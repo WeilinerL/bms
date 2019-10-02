@@ -255,8 +255,10 @@ public class TokenService {
     public String wxBind(String userName, String passWord, String openId) {
         String password = userMapper.selectPassWordByUserName(userName);
         if(passWord.equals(password)) {
-            userMapper.updateOpenId(openId);
-            return userMapper.selectByOpenId(openId);
+            if(userMapper.updateOpenId(openId) != 0) {
+                return userMapper.selectByOpenId(openId);
+            }
+            return null;
         }else { return null; }
     }
 }

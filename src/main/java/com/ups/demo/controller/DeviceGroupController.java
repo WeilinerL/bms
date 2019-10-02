@@ -3,6 +3,7 @@ package com.ups.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.DeviceGroupService;
+import com.ups.demo.utils.AppRunningRecorder;
 import com.ups.demo.utils.JsonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,16 +83,15 @@ public class DeviceGroupController {
 
     /**
      * 获取所有分组信息(只包含分组名及其id)
-     * @param JSONCONTENT {userName: String}
+     * @param userName String
      * @return {code: int, data: [{intGroupId: id, strGroupName: String}]}
      */
 
     @GetMapping(value = "get_all_device_group")
-    public ResponseEntity<Map<String, Object>> getAllDeviceGroup(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> getAllDeviceGroup(@RequestParam(value = "userName") String userName) {
         HashMap<String, Object> result = new HashMap<>();
-        if(JSONCONTENT.contains("userName")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            String userName = json.getString("userName");
+        if(userName != null) {
+            AppRunningRecorder.writeLog("获取所有分组(不包含设备) 用户名为: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("获取所有分组(不包含设备) 用户名为: " + userName);
             }
@@ -118,10 +118,12 @@ public class DeviceGroupController {
             int groupId = json.getInteger("groupID");
             List<JSONObject> deviceIds = (List<JSONObject>) json.get("deviceList");
             String userName = json.getString("userName");
+            AppRunningRecorder.writeLog("往用户名为: " + userName + " 的分组中添加设备表 分组id: " + groupId + "添加的设备有 " + deviceIds.size() + " 个");
             if(log.isTraceEnabled()) {
                 log.trace("往用户名为: " + userName + " 的分组中添加设备表 分组id: " + groupId + "添加的设备有 " + deviceIds.size() + " 个");
             }
             int insertSuccess = deviceGroupService.addDevice(groupId,deviceIds,userName);
+            AppRunningRecorder.writeLog("添加设备成功了 " + insertSuccess + " 个");
             if(log.isTraceEnabled()) {
                 log.trace("添加设备成功了 " + insertSuccess + " 个");
             }
@@ -151,14 +153,17 @@ public class DeviceGroupController {
             JSONObject json = JSON.parseObject(JSONCONTENT);
             int groupId = json.getInteger("groupID");
             String userName = json.getString("userName");
+            AppRunningRecorder.writeLog("删除分组 分组id为: " + groupId + " 分组用户为: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("删除分组 分组id为: " + groupId + " 分组用户为: " + userName);
             }
             if(deviceGroupService.deleteGroup(groupId,userName) != 0) {
+                AppRunningRecorder.writeLog("删除分组操作成功!");
                 if(log.isTraceEnabled()) {log.trace("删除分组操作成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else {
+                AppRunningRecorder.writeLog("删除分组操作失败!");
                 if(log.isTraceEnabled()) {log.trace("删除分组操作失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -183,14 +188,17 @@ public class DeviceGroupController {
             int groupId = json.getInteger("groupID");
             String newGroupName = json.getString("newGroupName");
             String userName = json.getString("userName");
+            AppRunningRecorder.writeLog("重命名分组 新的分组名为: " + newGroupName + " 用户名为: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("重命名分组 新的分组名为: " + newGroupName + " 用户名为: " + userName);
             }
             if(deviceGroupService.groupRename(groupId,newGroupName,userName) != 0) {
+                AppRunningRecorder.writeLog("重命名分组操作成功!");
                 if(log.isTraceEnabled()) {log.trace("重命名分组操作成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             } else {
+                AppRunningRecorder.writeLog("重命名分组操作失败!");
                 if(log.isTraceEnabled()) {log.trace("重命名分组操作失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -215,14 +223,17 @@ public class DeviceGroupController {
             int deviceId = json.getInteger("deviceID");
             int groupId = json.getInteger("groupID");
             String userName = json.getString("userName");
+            AppRunningRecorder.writeLog("移动设备 设备id:  " + deviceId + " 新的分组id: " + groupId);
             if(log.isTraceEnabled()) {
                 log.trace("移动设备 设备id:  " + deviceId + " 新的分组id: " + groupId);
             }
             if(deviceGroupService.moveDevice(deviceId,groupId,userName) != 0) {
+                AppRunningRecorder.writeLog("移动分组操作成功!");
                 if(log.isTraceEnabled()) {log.trace("移动分组操作成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             } else {
+                AppRunningRecorder.writeLog("移动分组操作失败!");
                 if(log.isTraceEnabled()) {log.trace("移动分组操作失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -235,16 +246,15 @@ public class DeviceGroupController {
 
     /**
      * 获取所有设备
-     * @param JSONCONTENT {userName: String}
+     * @param userName {userName: String}
      * @return {code: String, data: {[groupId: int, groupName: String, detail:[{intDeviceID: int, strDeviceName: String, strStatus: String, strDeviceModel: String}]]}}
      */
 
     @GetMapping(value = "get_all_device")
-    public ResponseEntity<Map<String, Object>> getAllDevice(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> getAllDevice(@RequestParam(value = "userName") String userName) {
         HashMap<String, Object> result = new HashMap<>();
-        if (JSONCONTENT.contains("userName")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            String userName = json.getString("userName");
+        if (userName != null) {
+            AppRunningRecorder.writeLog("获取所有分组(包含设备) 用户名为: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("获取所有分组(包含设备) 用户名为: " + userName);
             }
@@ -270,14 +280,17 @@ public class DeviceGroupController {
             JSONObject json = JSON.parseObject(JSONCONTENT);
             String userName = json.getString("userName");
             String newGroupName = json.getString("newGroupName");
+            AppRunningRecorder.writeLog("添加分组 新的分组名为: " + newGroupName + " 用户名为: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("添加分组 新的分组名为: " + newGroupName + " 用户名为: " + userName);
             }
             if(deviceGroupService.addGroup(userName,newGroupName) != 0) {
+                AppRunningRecorder.writeLog("添加分组操作成功!");
                 if(log.isTraceEnabled()) {log.trace("添加分组操作成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             } else {
+                AppRunningRecorder.writeLog("添加分组操作失败!");
                 if(log.isTraceEnabled()) {log.trace("添加分组操作失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);

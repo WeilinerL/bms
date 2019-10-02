@@ -248,8 +248,8 @@ public class DeviceService {
     @Transactional(propagation = Propagation.REQUIRED)
     public int deleteDevice(String userName, int deviceId) {
         if(deviceMapper.selectUserTelByDeviceId(deviceId).equals(userName)) {
-            deleteDeviceOfCloudBox(deviceMapper.selectByPrimaryKey(deviceId).getStrCodeId());
-            return deviceMapper.deleteByPrimaryKey(deviceId);
+            deviceMapper.deleteByPrimaryKey(deviceId);
+            return deleteDeviceOfCloudBox(deviceMapper.selectByPrimaryKey(deviceId).getStrCodeId());
         }else {
             return deviceShareMapper.deleteByDeviceIdAndUserName(deviceId,userName);
         }

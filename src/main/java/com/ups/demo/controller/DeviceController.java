@@ -3,6 +3,7 @@ package com.ups.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.service.DeviceService;
+import com.ups.demo.utils.AppRunningRecorder;
 import com.ups.demo.utils.JsonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,17 +43,16 @@ public class DeviceController {
 
     /**
      * 查询设备详情 所有电池
-     * @param JSONCONTENT {deviceId: int, deviceName: String}
+     * @param deviceId int
+     * @param deviceName String
      * @return {code: int, data: [{intBatteryId, int, intDeviceId: int, doubleVoltage: String, doubleTemprature: String, doubleResistan: String, doubleCapacity: String, intBatteryPack: int, dataReadTime: DATETIME}]}
      */
 
     @GetMapping(value = "get_device_detail")
-    public ResponseEntity<Map<String, Object>> getDeviceDetail(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> getDeviceDetail(@RequestParam(value = "deviceID") Integer deviceId, @RequestParam(value = "deviceName") String deviceName) {
         HashMap<String, Object> result = new HashMap<>();
-        if(JSONCONTENT.contains("deviceID") && JSONCONTENT.contains("deviceName")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            int deviceId = json.getInteger("deviceID");
-            String deviceName = json.getString("deviceName");
+        if(deviceId != null && deviceName != null) {
+            AppRunningRecorder.writeLog("查询设备详情(所有电池) 设备id: " + deviceId + " 设备名称: " + deviceName);
             if(log.isTraceEnabled()) {
                 log.trace("查询设备详情(所有电池) 设备id: " + deviceId + " 设备名称: " + deviceName);
             }
@@ -67,17 +67,16 @@ public class DeviceController {
 
     /**
      * 查询设备的详情
-     * @param JSONCONTENT {deviceID: int, userName: String}
+     * @param deviceId int
+     * @param userName String
      * @return {code: int, data: {groupID: int, groupName: String, deviceBrand: String, deviceModel: String, deviceAddress: String}}
      */
 
     @GetMapping(value = "get_device_main_detail")
-    public ResponseEntity<Map<String, Object>> getDeviceMainDetail(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> getDeviceMainDetail(@RequestParam(value = "deviceID") Integer deviceId, @RequestParam(value = "userName") String userName) {
         HashMap<String, Object> result = new HashMap<>();
-        if (JSONCONTENT.contains("deviceID") && JSONCONTENT.contains("userName")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            int deviceId = json.getInteger("deviceID");
-            String userName = json.getString("userName");
+        if (deviceId != null && userName != null) {
+            AppRunningRecorder.writeLog("查询设备详情 设备id: " + deviceId + " 用户名: " + userName);
             if(log.isTraceEnabled()) {
                 log.trace("查询设备详情 设备id: " + deviceId + " 用户名: " + userName);
             }
@@ -122,16 +121,19 @@ public class DeviceController {
             String version = json.getString("version");
             Date manufactureTime = json.getDate("manufactureTime");
             String serialNumber = json.getString("serialNumber");
+            AppRunningRecorder.writeLog("添加设备 云盒id: " + deviceCode + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName);
             if(log.isTraceEnabled()) {
                 log.trace("添加设备 云盒id: " + deviceCode + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName);
             }
             if(deviceService.addDevcice(deviceCode,
                     userName,deviceName,deviceBrand,deviceModel,
                     macAddress,seriesCode,seriesName,version,manufactureTime,serialNumber) != 0) {
+                AppRunningRecorder.writeLog("添加设备成功!");
                 if(log.isTraceEnabled()) {log.trace("添加设备成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else {
+                AppRunningRecorder.writeLog("添加设备失败!");
                 if(log.isTraceEnabled()) {log.trace("添加设备失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -156,10 +158,12 @@ public class DeviceController {
             int deviceId = json.getInteger("deviceID");
             String userName = json.getString("userName");
             if(deviceService.deleteDevice(userName,deviceId) != 0) {
+                AppRunningRecorder.writeLog("删除设备成功!");
                 if(log.isTraceEnabled()) {log.trace("删除设备成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else {
+                AppRunningRecorder.writeLog("删除设备失败!");
                 if(log.isTraceEnabled()) {log.trace("删除设备失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -188,14 +192,17 @@ public class DeviceController {
             String deviceModel = json.getString("deviceModel");
             String deviceName = json.getString("deviceName");
             String deviceAddress = json.getString("deviceAddress");
+            AppRunningRecorder.writeLog("修改设备 设备id" + deviceID + " 云盒id: " + deviceCode + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName + " 设备地址: " + deviceAddress);
             if (log.isTraceEnabled()) {
                 log.trace("修改设备 设备id" + deviceID + " 云盒id: " + deviceCode + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName + " 设备地址: " + deviceAddress);
             }
             if(deviceService.modifyDevice(deviceID,deviceCode,userName,deviceName,deviceBrand,deviceModel,deviceAddress) != 0) {
+                AppRunningRecorder.writeLog("修改设备成功!");
                 if(log.isTraceEnabled()) {log.trace("修改设备成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else {
+                AppRunningRecorder.writeLog("修改设备失败!");
                 if(log.isTraceEnabled()) {log.trace("修改设备失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);

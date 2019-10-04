@@ -151,11 +151,22 @@ public class DeviceController {
             JSONObject json = JSON.parseObject(JSONCONTENT);
             int deviceId = json.getInteger("deviceID");
             String userName = json.getString("userName");
-            if(deviceService.deleteDevice(userName,deviceId) != 0) {
+            Map<String,Integer> rs = deviceService.deleteDevice(userName,deviceId);
+            if(rs.get("owner") == 1) {
                 if(log.isTraceEnabled()) {log.trace("删除设备成功!");}
+                JSONObject data = new JSONObject();
+                data.put("deleteType",1);
                 result.put("code",1);
+                result.put("data",data);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
-            }else {
+            }else if (rs.get("share") == 1) {
+                if(log.isTraceEnabled()) {log.trace("删除分享设备成功!");}
+                JSONObject data = new JSONObject();
+                data.put("deleteType",2);
+                result.put("code",1);
+                result.put("data",data);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }else{
                 if(log.isTraceEnabled()) {log.trace("删除设备失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -175,23 +186,30 @@ public class DeviceController {
     @PutMapping(value = "modify_device")
     public ResponseEntity<Map<String, Object>> modifyDevice(@RequestBody String JSONCONTENT) {
         HashMap<String, Object> result = new HashMap<>();
-        if (JSONCONTENT.contains("deviceID") && JSONCONTENT.contains("deviceCode") && JSONCONTENT.contains("userName") && JSONCONTENT.contains("deviceBrand") && JSONCONTENT.contains("deviceModel") && JSONCONTENT.contains("deviceName") && JSONCONTENT.contains("deviceAddress")) {
+        if (JSONCONTENT.contains("deviceID") && JSONCONTENT.contains("userName") && JSONCONTENT.contains("deviceBrand") && JSONCONTENT.contains("deviceModel") && JSONCONTENT.contains("deviceName") && JSONCONTENT.contains("deviceAddress")) {
             JSONObject json = JSON.parseObject(JSONCONTENT);
             int deviceID = json.getInteger("deviceID");
-            String deviceCode = json.getString("deviceCode");
             String userName = json.getString("userName");
             String deviceBrand = json.getString("deviceBrand");
             String deviceModel = json.getString("deviceModel");
             String deviceName = json.getString("deviceName");
             String deviceAddress = json.getString("deviceAddress");
             if (log.isTraceEnabled()) {
-                log.trace("修改设备 设备id" + deviceID + " 云盒id: " + deviceCode + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName + " 设备地址: " + deviceAddress);
+                log.trace("修改设备 设备id" + deviceID + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName + " 设备地址: " + deviceAddress);
             }
-            if(deviceService.modifyDevice(deviceID,deviceCode,userName,deviceName,deviceBrand,deviceModel,deviceAddress) != 0) {
+            String rs =deviceService.modifyDevice(deviceID,userName,deviceName,deviceBrand,deviceModel,deviceAddress);
+            if(rs.equals("success")) {
                 if(log.isTraceEnabled()) {log.trace("修改设备成功!");}
                 result.put("code",1);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
-            }else {
+            }else if(rs.equals("wrong")) {
+                if(log.isTraceEnabled()) {log.trace("修改设备失败!不是主用户");}
+                JSONObject data = new JSONObject();
+                data.put("message","fail");
+                result.put("code",1);
+                result.put("data",data);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            } else{
                 if(log.isTraceEnabled()) {log.trace("修改设备失败!");}
                 result.put("code",0);
                 return ResponseEntity.status(HttpStatus.OK).body(result);

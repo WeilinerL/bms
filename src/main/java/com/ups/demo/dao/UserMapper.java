@@ -20,8 +20,8 @@ public interface UserMapper {
     @Select("select str_password from t_user where str_tel_number = #{telNumber}")
     String selectPassWordByUserName(String telNumber);
 
-    @Update("update t_user set str_open_id = #{openId}")
-    int updateOpenId(String openId);
+    @Update("update t_user set str_open_id = #{openId} where str_tel_number = #{telNumber}")
+    int updateOpenId(String openId, String telNumber);
 
     @Update("update t_user set str_password = #{newPassword} where str_tel_number = #{telNumber}")
     int updataByTelNumber(String newPassword, String telNumber);

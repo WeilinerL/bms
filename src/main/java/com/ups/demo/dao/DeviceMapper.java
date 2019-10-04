@@ -44,6 +44,9 @@ public interface DeviceMapper {
     @Select("select int_group_id from t_device where int_device_id = #{deviceId}")
     Integer selectGroupIdByDeviceId(int deviceId);
 
+    @Select("select str_code_id from t_device where int_device_id = #{deviceId}")
+    String selectCodeIdByDeviceId(int deviceId);
+
     @Update("update t_device set int_group_id = #{groupId} where int_device_id = #{deviceId}")
     int updateGroupIdByDeviceId(int groupId, int deviceId);
 

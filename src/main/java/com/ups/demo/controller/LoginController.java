@@ -130,7 +130,7 @@ public class LoginController {
                     return ResponseEntity.status(HttpStatus.OK).body(result);
                 }else {
                     if(log.isTraceEnabled()) {
-                        log.trace("微信小程序端登录 密码错误");
+                        log.trace("微信小程序端登录绑定 密码错误");
                     }
                     result.put("code",0);
                     return ResponseEntity.status(HttpStatus.OK).body(result);

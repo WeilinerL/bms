@@ -41,6 +41,9 @@ public interface DeviceShareMapper {
     @Delete("delete from t_device_share where int_device_id = #{deviceId} and str_shared_user_tel = #{userName}")
     int deleteByDeviceIdAndUserName(int deviceId, String userName);
 
+    @Delete("delete from t_device_share where int_device_id = #{deviceId}")
+    int deleteByDeviceId(int deviceId);
+
     int deleteByPrimaryKey(Integer intSharedId);
 
     int insert(DeviceShare record);

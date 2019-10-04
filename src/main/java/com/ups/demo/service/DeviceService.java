@@ -30,7 +30,7 @@ public class DeviceService {
     private DeviceDetailMapper deviceDetailMapper;
 
     @Autowired
-    private BatteryMapper batteryMapper;
+    private DataMapper dataMapper;
 
     @Autowired
     private CloudBoxMapper cloudBoxMapper;
@@ -127,12 +127,17 @@ public class DeviceService {
 //    }
 
     @Transactional(readOnly = true)
-    public List<Battery> getDeviceDetail(int deviceId) {
-        List<Battery> jsons = batteryMapper.selectAllByDeviceId(deviceId);
-        if(jsons.size() == 0) {
+    public List<Data> getDeviceDetail(int deviceId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date now = new Date();
+        String startTime = sdf.format(new Date(now.getTime() - 300000));
+        String endTime = sdf.format(new Date(now.getTime()));
+        String mac = cloudBoxMapper.selectMacAddressByCodeId(deviceMapper.selectCodeIdByDeviceId(deviceId));
+        List<Data> dataList = dataMapper.selectAllByMACAddress(mac,startTime,endTime);
+        if(dataList.size() == 0) {
             return null;
         }
-        return jsons;
+        return dataList;
     }
 
     @Transactional(readOnly = true)
@@ -246,21 +251,30 @@ public class DeviceService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public int deleteDevice(String userName, int deviceId) {
-        if(deviceMapper.selectUserTelByDeviceId(deviceId).equals(userName)) {
-            deviceMapper.deleteByPrimaryKey(deviceId);
-            return deleteDeviceOfCloudBox(deviceMapper.selectByPrimaryKey(deviceId).getStrCodeId());
-        }else {
-            return deviceShareMapper.deleteByDeviceIdAndUserName(deviceId,userName);
+    public Map<String,Integer> deleteDevice(String userName, int deviceId) {
+        Map<String,Integer> result = new HashMap<>();
+        String userName2 = deviceMapper.selectUserTelByDeviceId(deviceId);
+        if(userName2 != null) {
+            if(userName2.equals(userName)) {
+                String strCodeId = deviceMapper.selectByPrimaryKey(deviceId).getStrCodeId();
+                // 主子表删除更新要注意顺序
+                deviceShareMapper.deleteByDeviceId(deviceId); // 删除分享
+                deviceMapper.deleteByPrimaryKey(deviceId); // 删除本设备
+                result.put("share",0);
+                result.put("owner",deleteDeviceOfCloudBox(strCodeId)); // 删除云盒相应信息
+                return result;
+            }else {
+                result.put("owner",0);
+                result.put("share",deviceShareMapper.deleteByDeviceIdAndUserName(deviceId,userName));
+                return result;
+            }
         }
+        result.put("owner",0);
+        result.put("share",0);
+        return result;
     }
 
     // 更改设备
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public int modifyCloudBoxCodeId(String deviceCode) {
-        return cloudBoxMapper.updateByCodeId(deviceCode);
-    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public int modifyDeviceDetail(String deviceBrand, String deviceModel) {
@@ -275,23 +289,27 @@ public class DeviceService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public int modifyDevice(int deviceId, String deviceCode, String userName, String deviceName, String deviceBrand, String deviceModel, String deviceAddress) {
+    public String modifyDevice(int deviceId, String userName, String deviceName, String deviceBrand, String deviceModel, String deviceAddress) {
+        String userName2 = deviceMapper.selectUserTelByDeviceId(deviceId);
         // 只有主用户可以更改设备
-        if(deviceMapper.selectUserTelByDeviceId(deviceId).equals(userName)) {
-            int detailId = deviceDetailMapper.selectIdByDeviceBrandAndDeviceModel(deviceBrand,deviceModel);
-            Device device = deviceMapper.selectAllByDeviceIdAndUserTel(deviceId,userName);
-            if(device != null) {
-                modifyDeviceDetail(deviceBrand,deviceModel);
-                device.setStrCodeId(deviceCode);
-                device.setStrDeviceName(deviceName);
-                device.setStrDeviceAddress(deviceAddress);
-                device.setIntDetailId(detailId);
-                deviceMapper.updateByPrimaryKey(device);
-                return modifyCloudBoxCodeId(deviceCode);
+        if(userName2 != null) {
+            if(userName2.equals(userName)) {
+                Device device = deviceMapper.selectAllByDeviceIdAndUserTel(deviceId,userName);
+                if(device != null) {
+                    modifyDeviceDetail(deviceBrand,deviceModel);
+                    device.setStrDeviceName(deviceName);
+                    device.setStrDeviceAddress(deviceAddress);
+                    device.setIntDetailId(deviceDetailMapper.selectIdByDeviceBrandAndDeviceModel(deviceBrand,deviceModel));
+                    if(deviceMapper.updateByPrimaryKey(device) != 0) {
+                        return "success";
+                    }
+                }
+                return "fail";
+            }else {
+                return "wrong";
             }
-            return 0;
-        }else {
-            return 0;
+        } else {
+            return "fail";
         }
     }
 

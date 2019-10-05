@@ -32,6 +32,12 @@ public interface DeviceShareMapper {
     @Select("select int_group_id from t_device_share where str_shared_user_tel = #{userName}")
     List<Integer> selectGroupIdByUserId(String userName);
 
+    @Select("select * from t_device_share where str_shared_user_tel = #{userName}")
+    List<DeviceShare> selectAllByUserTel(String userName);
+
+    @Select("select int_shared_id from t_device_share where str_shared_user_tel = #{userName} and int_device_id = #{deviceId}")
+    Integer selectKeyIdByUserNameAndDeviceId(String userName, int deviceId);
+
     @Update("update t_device_share set int_group_id = #{groupId} where int_device_id = #{deviceId}")
     int updateGroupIdByDeviceId(int groupId, int deviceId);
 

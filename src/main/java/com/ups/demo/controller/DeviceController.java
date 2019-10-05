@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -197,7 +198,7 @@ public class DeviceController {
             if (log.isTraceEnabled()) {
                 log.trace("修改设备 设备id" + deviceID + " 用户名: " + userName + " 设备品牌: " + deviceBrand + " 设备型号：" + deviceModel + " 设备名称: " + deviceName + " 设备地址: " + deviceAddress);
             }
-            String rs =deviceService.modifyDevice(deviceID,userName,deviceName,deviceBrand,deviceModel,deviceAddress);
+            String rs = deviceService.modifyDevice(deviceID,userName,deviceName,deviceBrand,deviceModel,deviceAddress);
             if(rs.equals("success")) {
                 if(log.isTraceEnabled()) {log.trace("修改设备成功!");}
                 result.put("code",1);
@@ -215,6 +216,33 @@ public class DeviceController {
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }
         }else {
+            result.put("code",0);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    @PostMapping(value = "share_device")
+    public ResponseEntity<Map<String, Object>> shareDevice(@RequestBody String JSONCONTENT) {
+        HashMap<String, Object> result = new HashMap<>();
+        if (JSONCONTENT.contains("deviceID") && JSONCONTENT.contains("sharedUserName")) {
+            JSONObject json = JSON.parseObject(JSONCONTENT);
+            int deviceId = json.getInteger("deviceID");
+            List<JSONObject> userNameList = (List<JSONObject>) json.get("sharedUserName");
+            if(log.isTraceEnabled()) {
+                log.trace("分享设备 设备ID: " + deviceId + " 被分享者: " + userNameList);
+            }
+            JSONObject resultCount = deviceService.shareDevice(deviceId,userNameList);
+            if(resultCount.getInteger("successCount") != 0) {
+                if(log.isTraceEnabled()) {log.trace("分享设备成功了 " + resultCount.getInteger("successCount") + "个");}
+                result.put("code",1);
+                result.put("data",resultCount.get("shareSuccessList"));
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            } else {
+                if(log.isTraceEnabled()) {log.trace("分享设备失败!");}
+                result.put("code",0);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
+        } else {
             result.put("code",0);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }

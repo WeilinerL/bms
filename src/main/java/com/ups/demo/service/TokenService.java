@@ -1,5 +1,6 @@
 package com.ups.demo.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.interfaces.Claim;
 import com.ups.demo.controller.LoginController;
 import com.ups.demo.dao.UserLogInfoMapper;
@@ -248,17 +249,17 @@ public class TokenService {
         };
     }
 
-    public String getUserTypeByOpenId(String openId) {
-        return userMapper.selectByOpenId(openId);
+    public JSONObject getUserTypeAndNameByOpenId(String openId) {
+        return userMapper.selectUserTypeUserNameByOpenId(openId);
     }
 
-    public String wxBind(String userName, String passWord, String openId) {
+    public JSONObject wxBind(String userName, String passWord, String openId) {
         String password = userMapper.selectPassWordByUserName(userName);
         if(passWord.equals(password)) {
             if(userMapper.updateOpenId(openId,userName) != 0) {
-                return userMapper.selectByOpenId(openId);
+                return userMapper.selectUserTypeUserNameByOpenId(openId);
             }
-            return null;
-        }else { return null; }
+            return new JSONObject();
+        }else { return new JSONObject(); }
     }
 }

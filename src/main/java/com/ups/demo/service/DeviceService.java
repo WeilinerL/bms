@@ -1,5 +1,6 @@
 package com.ups.demo.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ups.demo.dao.*;
 import com.ups.demo.pojo.*;
@@ -34,6 +35,9 @@ public class DeviceService {
 
     @Autowired
     private CloudBoxMapper cloudBoxMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     //查询所有设备
     //返回值为一组用于展示的List集合数据 格式为jason
@@ -311,6 +315,28 @@ public class DeviceService {
         } else {
             return "fail";
         }
+    }
+
+    public JSONObject shareDevice(int deviceId, List<JSONObject> sharedList) {
+        JSONObject data = new JSONObject();
+        List<String> strings = new ArrayList<>();
+        String ownerName = deviceMapper.selectUserTelByDeviceId(deviceId);
+        int count = 0;
+        for(JSONObject json : sharedList) {
+            String sharedName = json.getString("userName");
+            if(sharedName.equals(ownerName) || userMapper.selectByTelNumber(sharedName) == null || deviceShareMapper.selectKeyIdByUserNameAndDeviceId(sharedName,deviceId) != null) {
+                continue;
+            }
+            DeviceShare deviceShare = new DeviceShare();
+            deviceShare.setIntDeviceId(deviceId);
+            deviceShare.setStrSharedUserTel(sharedName);
+            deviceShare.setIntGroupId(0);
+            count += deviceShareMapper.insert(deviceShare);
+            strings.add(sharedName);
+        }
+        data.put("successCount",count);
+        data.put("shareSuccessList",strings);
+        return data;
     }
 
 }

@@ -82,9 +82,10 @@ public class LoginController {
                     log.trace("微信验证端返回结果：" + wxResult);
                     log.trace("获取微信端用于验证的 openID: " + wxResult.getString("openid"));
                 }
+                JSONObject jsonObject = tokenService.getUserTypeAndNameByOpenId(wxResult.getString("openid"));
                 JSONObject data = new JSONObject();
-                data.put("userType",tokenService.getUserTypeByOpenId(wxResult.getString("openid")));
-                data.put("openID",wxResult.getString("openID"));
+                data.put("userType",jsonObject.getString("str_user_type"));
+                data.put("userName",jsonObject.getString("str_tel_number"));
                 result.put("code",1);
                 result.put("data",data);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -121,10 +122,11 @@ public class LoginController {
                     log.trace("微信验证端返回结果：" + wxResult);
                     log.trace("获取微信端用于验证的 openID: " + wxResult.getString("openid"));
                 }
-                String userType = tokenService.wxBind(userName,passWord,wxResult.getString("openid"));
-                if(userType != null) {
+                JSONObject jsonObject = tokenService.wxBind(userName,passWord,wxResult.getString("openid"));
+                if(jsonObject.getString("str_user_type") != null) {
                     JSONObject data = new JSONObject();
-                    data.put("userType",userType);
+                    data.put("userType",jsonObject.getString("str_user_type"));
+//                    data.put("userName",jsonObject.getString("str_tel_number"));
                     result.put("code",1);
                     result.put("data",data);
                     return ResponseEntity.status(HttpStatus.OK).body(result);

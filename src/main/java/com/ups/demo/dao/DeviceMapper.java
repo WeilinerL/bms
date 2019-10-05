@@ -20,6 +20,9 @@ public interface DeviceMapper {
     @Select("select * from t_device where int_device_id = #{deviceId} and str_user_tel =#{userName}")
     Device selectAllByDeviceIdAndUserTel(int deviceId, String userName);
 
+    @Select("select * from t_device where str_user_tel =#{userName}")
+    List<Device> selectAllByUserTel(String userName);
+
     @Select("select str_user_tel from t_device where str_code_id = #{deviceCode}")
     String selectUserTelByDeviceCode(String deviceCode);
 

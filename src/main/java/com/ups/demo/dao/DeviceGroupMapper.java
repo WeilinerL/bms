@@ -16,6 +16,9 @@ public interface DeviceGroupMapper {
     @Select("select * from t_device_group")
     List<DeviceGroup> selectAll();
 
+    @Select("select * from t_device_group where str_user_name = #{userName}")
+    List<DeviceGroup> selectAllByUserName(String userName);
+
     @Select("select * from t_device_group where int_group_id = #{groupid}")
     DeviceGroup selectAllByGroupId(int groupId);
 

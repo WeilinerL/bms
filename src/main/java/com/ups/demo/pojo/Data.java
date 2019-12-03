@@ -20,6 +20,8 @@ public class Data {
 
     private Integer intBatteryId;
 
+    private Integer intBatteryPack;
+
     public Integer getIntDataId() {
         return intDataId;
     }
@@ -66,5 +68,13 @@ public class Data {
 
     public void setIntBatteryId(Integer intBatteryId) {
         this.intBatteryId = intBatteryId;
+    }
+
+    public Integer getIntBatteryPack() {
+        return intBatteryPack;
+    }
+
+    public void setIntBatteryPack(Integer intBatteryPack) {
+        this.intBatteryPack = intBatteryPack;
     }
 }

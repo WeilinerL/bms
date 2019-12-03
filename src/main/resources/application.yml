@@ -13,13 +13,17 @@ spring:
   datasource: #连接数据库
     dbcp2.validation-query: select 1
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ups
+    url: jdbc:mysql://localhost:3306/ups?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
     username: root
-    password: 123456
+    password: Mysql@123
 mybatis:
   mapper-Locations: classpath:com/ups/demo/mapper/*.xml #Mapper.xml
   type-Aliases-Package: com.ups.demo.pojo
   configuration:
     map-underscore-to-camel-case: true #数据库下划线转驼峰命名
 server:
-  port: 8080
+  port: 8090 #跳转8443 https加密端口号 443
+  ssl:
+    key-store: classpath:www.waitwindcome.com.jks  #SSL证书路径 一定要加上classpath:
+    key-store-password: 1172282096 #SSL证书密码
+    key-store-type: JKS #证书类型

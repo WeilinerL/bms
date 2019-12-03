@@ -2,7 +2,6 @@ package com.ups.demo.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ups.demo.pojo.Data;
 import com.ups.demo.pojo.User;
 import com.ups.demo.service.UserService;
 import org.apache.commons.logging.Log;
@@ -100,6 +99,21 @@ public class UserContoller {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
+
+    /**
+     * 更改用户个人信息
+     * @param JSONCONTENT {
+     *     "originalUserName": String,
+     *     "newUserName": String,
+     *     "password": String,
+     *     "nickName": String,
+     *     "profession": String,
+     *     "realName": String,
+     *     "address": String,
+     *     "email": String
+     * }
+     * @return {code: int}
+     */
 
     @PutMapping(value = "user_info_modify")
     public ResponseEntity<Map<String, Object>> userInfoModify(@RequestBody String JSONCONTENT) {

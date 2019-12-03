@@ -4,7 +4,6 @@ import com.ups.demo.pojo.Data;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
 @Component

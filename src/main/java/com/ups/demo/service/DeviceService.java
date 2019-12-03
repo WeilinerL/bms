@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -131,17 +132,138 @@ public class DeviceService {
 //    }
 
     @Transactional(readOnly = true)
-    public List<Data> getDeviceDetail(int deviceId) {
+    public List<JSONObject> getDeviceDetail(int deviceId) {
+        Map<String,Object> data = new HashMap<>();
+        List<JSONObject> batteryData = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         String startTime = sdf.format(new Date(now.getTime() - 300000));
         String endTime = sdf.format(new Date(now.getTime()));
         String mac = cloudBoxMapper.selectMacAddressByCodeId(deviceMapper.selectCodeIdByDeviceId(deviceId));
         List<Data> dataList = dataMapper.selectAllByMACAddress(mac,startTime,endTime);
+
         if(dataList.size() == 0) {
             return null;
         }
-        return dataList;
+
+        Map<String,Object> doubleMap = new HashMap<>();
+        for(Data d : dataList) {
+            String batteryIdAndPack = d.getIntBatteryId() + ":" + d.getIntBatteryPack();
+            if(data.get(batteryIdAndPack) != null) {
+                doubleMap = (Map<String, Object>) data.get(batteryIdAndPack);
+                doubleMap.put(d.getStrDataName(),d.getDoubleReadValues());
+                doubleMap.put("dateReadTime",df.format(d.getDateReadTime()));
+
+            } else {
+                doubleMap = new HashMap<>();
+                doubleMap.put(d.getStrDataName(),d.getDoubleReadValues());
+                doubleMap.put("dateReadTime",df.format(d.getDateReadTime()));
+                data.put(batteryIdAndPack,doubleMap);
+            }
+        }
+
+        for(Map.Entry<String,Object> map : data.entrySet()) {
+            JSONObject jsonObject = new JSONObject();
+            String[] batteryIdAndPack = map.getKey().split(":");
+            jsonObject.put("intBatteryId",Integer.parseInt(batteryIdAndPack[0]));
+            jsonObject.put("intBatteryPack",Integer.parseInt(batteryIdAndPack[1]));
+            Map<String,Object> value = (Map<String, Object>) map.getValue();
+            for(Map.Entry<String,Object> map2 : value.entrySet()) {
+                jsonObject.put(map2.getKey(),map2.getValue());
+            }
+            batteryData.add(jsonObject);
+        }
+
+        return batteryData;
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<JSONObject> getDeviceHistory(int deviceId, String startTime, String endTime) throws ParseException {
+        Map<String,Object> data = new HashMap<>();
+        List<JSONObject> batteryData = new ArrayList<>();
+        List<JSONObject> batteryData2 = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 如果是查询实时数据
+        if(startTime == null && endTime == null) {
+            Date now = new Date();
+            startTime = sdf.format(new Date(now.getTime() - 300000));
+            endTime = sdf.format(new Date(now.getTime()));
+
+        }
+        String mac = cloudBoxMapper.selectMacAddressByCodeId(deviceMapper.selectCodeIdByDeviceId(deviceId));
+        List<Data> dataList = dataMapper.selectAllByMACAddress(mac,startTime,endTime);
+
+        if(dataList.size() == 0) {
+            return null;
+        }
+        Map<String,Object> doubleMap = new HashMap<>();
+        long preTime = sdf.parse(startTime).getTime();
+        for(Data d : dataList) {
+            long nowTime = d.getDateReadTime().getTime();
+            if(nowTime - preTime >= 290000) {
+                preTime = nowTime;
+            }
+            String batteryIdAndPack = d.getIntBatteryId() + ":" + d.getIntBatteryPack() + ":" + preTime;
+            if(data.get(batteryIdAndPack) != null) {
+                doubleMap = (Map<String, Object>) data.get(batteryIdAndPack);
+                doubleMap.put(d.getStrDataName(),d.getDoubleReadValues());
+//                doubleMap.put("dateReadTime",df.format(d.getDateReadTime()));
+
+            } else {
+                doubleMap = new HashMap<>();
+                doubleMap.put(d.getStrDataName(),d.getDoubleReadValues());
+                doubleMap.put("dateReadTime",df.format(d.getDateReadTime()));
+                data.put(batteryIdAndPack,doubleMap);
+            }
+        }
+
+        for(Map.Entry<String,Object> map : data.entrySet()) {
+            JSONObject jsonObject = new JSONObject();
+            String[] batteryIdAndPack = map.getKey().split(":");
+            jsonObject.put("intBatteryId",Integer.parseInt(batteryIdAndPack[0]));
+            jsonObject.put("intBatteryPack",Integer.parseInt(batteryIdAndPack[1]));
+            Map<String,Object> value = (Map<String, Object>) map.getValue();
+            for(Map.Entry<String,Object> map2 : value.entrySet()) {
+                jsonObject.put(map2.getKey(),map2.getValue());
+            }
+            batteryData.add(jsonObject);
+        }
+
+
+        Map<String,Object> data2 = new HashMap<>();
+        Map<String,JSONObject> doubleMap2 = new HashMap<>();
+        for(JSONObject jsonObject : batteryData) {
+            String batteryIdAndPack = jsonObject.get("intBatteryId") + ":" + jsonObject.get("intBatteryPack");
+            if(data2.get(batteryIdAndPack) != null) {
+                doubleMap2 = (Map<String, JSONObject>) data2.get(batteryIdAndPack);
+                doubleMap2.put((String) jsonObject.get("dateReadTime"),jsonObject);
+
+            }else {
+                doubleMap2 = new HashMap<>();
+                doubleMap2.put((String) jsonObject.get("dateReadTime"),jsonObject);
+                data2.put(batteryIdAndPack,doubleMap2);
+            }
+        }
+
+        for(Map.Entry<String,Object> map : data2.entrySet()) {
+            JSONObject jsonObject = new JSONObject();
+            List<Object> timeList = new ArrayList<>();
+            String[] batteryIdAndPack = map.getKey().split(":");
+            jsonObject.put("intBatteryId",Integer.parseInt(batteryIdAndPack[0]));
+            jsonObject.put("intBatteryPack",Integer.parseInt(batteryIdAndPack[1]));
+            Map<String,Object> value = (Map<String, Object>) map.getValue();
+            for(Map.Entry<String,Object> map2 : value.entrySet()) {
+                timeList.add(map2.getValue());
+            }
+            jsonObject.put("dataList",timeList);
+            batteryData2.add(jsonObject);
+        }
+
+        return batteryData2;
     }
 
     @Transactional(readOnly = true)
@@ -317,6 +439,7 @@ public class DeviceService {
         }
     }
 
+    // 分享设备
     public JSONObject shareDevice(int deviceId, List<JSONObject> sharedList) {
         JSONObject data = new JSONObject();
         List<String> strings = new ArrayList<>();

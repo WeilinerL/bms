@@ -256,6 +256,11 @@ public class TokenService {
     public JSONObject wxBind(String userName, String passWord, String openId) {
         String password = userMapper.selectPassWordByUserName(userName);
         if(passWord.equals(password)) {
+            JSONObject json = userMapper.selectUserTypeUserNameByOpenId(openId);
+            // 注销原用户
+            if(json != null && !json.getString("str_tel_number").equals(userName)) {
+                userMapper.updateOpenId(null,json.getString("str_tel_number"));
+            }
             if(userMapper.updateOpenId(openId,userName) != 0) {
                 return userMapper.selectUserTypeUserNameByOpenId(openId);
             }

@@ -195,18 +195,27 @@ public class DeviceGroupService {
         return deviceGroupMapper.deleteByGroupIdAndUserName(groupId,userName);
     }
 
+    // 重命名分组
     public int groupRename(int groupId, String newGroupName, String userName) {
         return deviceGroupMapper.updateGroupNameByGroupIdAndUserName(newGroupName,groupId,userName);
     }
 
+    // 移动设备
     public int moveDevice(int deviceId, int groupId, String userName) {
-        if(deviceGroupMapper.selectUserNameByGroupId(groupId) != null && deviceGroupMapper.selectUserNameByGroupId(groupId).equals(userName)) {
+        if(groupId == 0) {
             if(deviceMapper.updateGroupIdByDeviceIdAndUserName(groupId,deviceId,userName) == 0) {
                 return deviceShareMapper.updateGroupIdByDeviceIdAndUserName(groupId,deviceId,userName);
             }
             return 1;
+        } else {
+            if(deviceGroupMapper.selectUserNameByGroupId(groupId) != null && deviceGroupMapper.selectUserNameByGroupId(groupId).equals(userName)) {
+                if(deviceMapper.updateGroupIdByDeviceIdAndUserName(groupId,deviceId,userName) == 0) {
+                    return deviceShareMapper.updateGroupIdByDeviceIdAndUserName(groupId,deviceId,userName);
+                }
+                return 1;
+            }
+            return 0;
         }
-        return 0;
     }
 
     @Transactional(readOnly = true)

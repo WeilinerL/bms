@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class DeviceController {
      */
 
     @GetMapping(value = "get_device_detail")
-    public ResponseEntity<Map<String, Object>> getDeviceDetail(@RequestParam(value = "deviceID") Integer deviceId, @RequestParam(value = "deviceName") String deviceName) {
+    public ResponseEntity<Map<String, Object>> getDeviceDetail(@RequestParam(value = "deviceID") Integer deviceId, @RequestParam(value = "deviceName") String deviceName) throws ParseException {
         HashMap<String, Object> result = new HashMap<>();
         if(deviceId != null && deviceName != null) {
             if(log.isTraceEnabled()) {
@@ -59,6 +60,22 @@ public class DeviceController {
             result.put("data",deviceService.getDeviceDetail(deviceId));
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } else {
+            result.put("code",0);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    @GetMapping(value = "get_device_history_data")
+    public ResponseEntity<Map<String, Object>> getDeviceHistoryData(@RequestParam(value = "deviceID") Integer deviceId, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime) throws ParseException {
+        HashMap<String, Object> result = new HashMap<>();
+        if(deviceId != null && startTime != null && endTime != null) {
+            if(log.isTraceEnabled()) {
+                log.trace("获取设备历史数据,设备ID: " + deviceId + " 开始时间: " + startTime + " 结束时间: " + endTime);
+            }
+            result.put("code",1);
+            result.put("data",deviceService.getDeviceHistory(deviceId,startTime,endTime));
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }else {
             result.put("code",0);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
@@ -141,18 +158,15 @@ public class DeviceController {
 
     /**
      * 删除设备
-     * @param JSONCONTENT {deviceID: int}
+     * @param userName, deviceID
      * @return {code: int}
      */
 
     @DeleteMapping(value = "delete_device")
-    public ResponseEntity<Map<String, Object>> deleteDevice(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> deleteDevice(@RequestParam(value = "userName") String  userName, @RequestParam(value = "deviceID") Integer deviceID) {
         HashMap<String, Object> result = new HashMap<>();
-        if (JSONCONTENT.contains("userName") && JSONCONTENT.contains("deviceID")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            int deviceId = json.getInteger("deviceID");
-            String userName = json.getString("userName");
-            Map<String,Integer> rs = deviceService.deleteDevice(userName,deviceId);
+        if (userName != null && deviceID != null) {
+            Map<String,Integer> rs = deviceService.deleteDevice(userName,deviceID);
             if(rs.get("owner") == 1) {
                 if(log.isTraceEnabled()) {log.trace("删除设备成功!");}
                 JSONObject data = new JSONObject();
@@ -201,7 +215,10 @@ public class DeviceController {
             String rs = deviceService.modifyDevice(deviceID,userName,deviceName,deviceBrand,deviceModel,deviceAddress);
             if(rs.equals("success")) {
                 if(log.isTraceEnabled()) {log.trace("修改设备成功!");}
+                JSONObject data = new JSONObject();
+                data.put("message","success");
                 result.put("code",1);
+                result.put("data",data);
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else if(rs.equals("wrong")) {
                 if(log.isTraceEnabled()) {log.trace("修改设备失败!不是主用户");}

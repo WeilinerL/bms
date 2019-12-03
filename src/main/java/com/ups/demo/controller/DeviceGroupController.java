@@ -138,17 +138,14 @@ public class DeviceGroupController {
 
     /**
      * 删除分组
-     * @param JSONCONTENT {groupId: int}
+     * @param
      * @return {code: int}
      */
 
     @DeleteMapping(value = "delete_group")
-    public ResponseEntity<Map<String, Object>> deleteGroup(@RequestBody String JSONCONTENT) {
+    public ResponseEntity<Map<String, Object>> deleteGroup(@RequestParam(value = "groupID") Integer groupId, @RequestParam(value = "userName") String userName) {
         HashMap<String, Object> result = new HashMap<>();
-        if(JSONCONTENT.contains("groupID") && JSONCONTENT.contains("userName")) {
-            JSONObject json = JSON.parseObject(JSONCONTENT);
-            int groupId = json.getInteger("groupID");
-            String userName = json.getString("userName");
+        if(groupId != null && userName != null) {
             if(log.isTraceEnabled()) {
                 log.trace("删除分组 分组id为: " + groupId + " 分组用户为: " + userName);
             }

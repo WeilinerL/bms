@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.crecode.bms.dao.DataMapper" >
+  <resultMap id="BaseResultMap" type="cn.crecode.bms.pojo.Data" >
+    <id column="int_data_id" property="intDataId" jdbcType="INTEGER" />
+    <result column="str_mac_address" property="strMacAddress" jdbcType="VARCHAR" />
+    <result column="str_data_name" property="strDataName" jdbcType="VARCHAR" />
+    <result column="double_read_values" property="doubleReadValues" jdbcType="DOUBLE" />
+    <result column="date_read_time" property="dateReadTime" jdbcType="TIMESTAMP" />
+    <result column="int_battery_id" property="intBatteryId" jdbcType="INTEGER" />
+    <result column="int_battery_pack" property="intBatteryPack" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_data_id, str_mac_address, str_data_name, double_read_values, date_read_time, 
+    int_battery_id, int_battery_pack
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_data
+    where int_data_id = #{intDataId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_data
+    where int_data_id = #{intDataId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.crecode.bms.pojo.Data" >
+    insert into t_data (int_data_id, str_mac_address, str_data_name, 
+      double_read_values, date_read_time, int_battery_id, 
+      int_battery_pack)
+    values (#{intDataId,jdbcType=INTEGER}, #{strMacAddress,jdbcType=VARCHAR}, #{strDataName,jdbcType=VARCHAR}, 
+      #{doubleReadValues,jdbcType=DOUBLE}, #{dateReadTime,jdbcType=TIMESTAMP}, #{intBatteryId,jdbcType=INTEGER}, 
+      #{intBatteryPack,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.crecode.bms.pojo.Data" >
+    insert into t_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intDataId != null" >
+        int_data_id,
+      </if>
+      <if test="strMacAddress != null" >
+        str_mac_address,
+      </if>
+      <if test="strDataName != null" >
+        str_data_name,
+      </if>
+      <if test="doubleReadValues != null" >
+        double_read_values,
+      </if>
+      <if test="dateReadTime != null" >
+        date_read_time,
+      </if>
+      <if test="intBatteryId != null" >
+        int_battery_id,
+      </if>
+      <if test="intBatteryPack != null" >
+        int_battery_pack,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intDataId != null" >
+        #{intDataId,jdbcType=INTEGER},
+      </if>
+      <if test="strMacAddress != null" >
+        #{strMacAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strDataName != null" >
+        #{strDataName,jdbcType=VARCHAR},
+      </if>
+      <if test="doubleReadValues != null" >
+        #{doubleReadValues,jdbcType=DOUBLE},
+      </if>
+      <if test="dateReadTime != null" >
+        #{dateReadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="intBatteryId != null" >
+        #{intBatteryId,jdbcType=INTEGER},
+      </if>
+      <if test="intBatteryPack != null" >
+        #{intBatteryPack,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.crecode.bms.pojo.Data" >
+    update t_data
+    <set >
+      <if test="strMacAddress != null" >
+        str_mac_address = #{strMacAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strDataName != null" >
+        str_data_name = #{strDataName,jdbcType=VARCHAR},
+      </if>
+      <if test="doubleReadValues != null" >
+        double_read_values = #{doubleReadValues,jdbcType=DOUBLE},
+      </if>
+      <if test="dateReadTime != null" >
+        date_read_time = #{dateReadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="intBatteryId != null" >
+        int_battery_id = #{intBatteryId,jdbcType=INTEGER},
+      </if>
+      <if test="intBatteryPack != null" >
+        int_battery_pack = #{intBatteryPack,jdbcType=INTEGER},
+      </if>
+    </set>
+    where int_data_id = #{intDataId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.crecode.bms.pojo.Data" >
+    update t_data
+    set str_mac_address = #{strMacAddress,jdbcType=VARCHAR},
+      str_data_name = #{strDataName,jdbcType=VARCHAR},
+      double_read_values = #{doubleReadValues,jdbcType=DOUBLE},
+      date_read_time = #{dateReadTime,jdbcType=TIMESTAMP},
+      int_battery_id = #{intBatteryId,jdbcType=INTEGER},
+      int_battery_pack = #{intBatteryPack,jdbcType=INTEGER}
+    where int_data_id = #{intDataId,jdbcType=INTEGER}
+  </update>
+</mapper>

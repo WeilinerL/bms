@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.crecode.bms.dao.DeviceGroupMapper" >
+  <resultMap id="BaseResultMap" type="cn.crecode.bms.pojo.DeviceGroup" >
+    <id column="int_group_id" property="intGroupId" jdbcType="INTEGER" />
+    <result column="str_group_name" property="strGroupName" jdbcType="VARCHAR" />
+    <result column="str_user_name" property="strUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_group_id, str_group_name, str_user_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device_group
+    where int_group_id = #{intGroupId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_device_group
+    where int_group_id = #{intGroupId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.crecode.bms.pojo.DeviceGroup" >
+    insert into t_device_group (int_group_id, str_group_name, str_user_name
+      )
+    values (#{intGroupId,jdbcType=INTEGER}, #{strGroupName,jdbcType=VARCHAR}, #{strUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.crecode.bms.pojo.DeviceGroup" >
+    insert into t_device_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intGroupId != null" >
+        int_group_id,
+      </if>
+      <if test="strGroupName != null" >
+        str_group_name,
+      </if>
+      <if test="strUserName != null" >
+        str_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intGroupId != null" >
+        #{intGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="strGroupName != null" >
+        #{strGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserName != null" >
+        #{strUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.crecode.bms.pojo.DeviceGroup" >
+    update t_device_group
+    <set >
+      <if test="strGroupName != null" >
+        str_group_name = #{strGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserName != null" >
+        str_user_name = #{strUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where int_group_id = #{intGroupId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.crecode.bms.pojo.DeviceGroup" >
+    update t_device_group
+    set str_group_name = #{strGroupName,jdbcType=VARCHAR},
+      str_user_name = #{strUserName,jdbcType=VARCHAR}
+    where int_group_id = #{intGroupId,jdbcType=INTEGER}
+  </update>
+</mapper>

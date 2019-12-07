@@ -1,0 +1,106 @@
+package cn.crecode.bms.pojo;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class User {
+    private Integer intUserId;
+
+    private String strTelNumber;
+
+    private String strPassword;
+
+    private String strNickname;
+
+    private String strProfession;
+
+    private String strRealName;
+
+    private String strAddress;
+
+    private String strEmail;
+
+    private String strUserType;
+
+    private String strOpenId;
+
+    public Integer getIntUserId() {
+        return intUserId;
+    }
+
+    public void setIntUserId(Integer intUserId) {
+        this.intUserId = intUserId;
+    }
+
+    public String getStrTelNumber() {
+        return strTelNumber;
+    }
+
+    public void setStrTelNumber(String strTelNumber) {
+        this.strTelNumber = strTelNumber == null ? null : strTelNumber.trim();
+    }
+
+    public String getStrPassword() {
+        return strPassword;
+    }
+
+    public void setStrPassword(String strPassword) {
+        this.strPassword = strPassword == null ? null : strPassword.trim();
+    }
+
+    public String getStrNickname() {
+        return strNickname;
+    }
+
+    public void setStrNickname(String strNickname) {
+        this.strNickname = strNickname == null ? null : strNickname.trim();
+    }
+
+    public String getStrProfession() {
+        return strProfession;
+    }
+
+    public void setStrProfession(String strProfession) {
+        this.strProfession = strProfession == null ? null : strProfession.trim();
+    }
+
+    public String getStrRealName() {
+        return strRealName;
+    }
+
+    public void setStrRealName(String strRealName) {
+        this.strRealName = strRealName == null ? null : strRealName.trim();
+    }
+
+    public String getStrAddress() {
+        return strAddress;
+    }
+
+    public void setStrAddress(String strAddress) {
+        this.strAddress = strAddress == null ? null : strAddress.trim();
+    }
+
+    public String getStrEmail() {
+        return strEmail;
+    }
+
+    public void setStrEmail(String strEmail) {
+        this.strEmail = strEmail == null ? null : strEmail.trim();
+    }
+
+    public String getStrUserType() {
+        return strUserType;
+    }
+
+    public void setStrUserType(String strUserType) {
+        this.strUserType = strUserType == null ? null : strUserType.trim();
+    }
+
+    public String getStrOpenId() {
+        return strOpenId;
+    }
+
+    public void setStrOpenId(String strOpenId) {
+        this.strOpenId = strOpenId == null ? null : strOpenId.trim();
+    }
+}

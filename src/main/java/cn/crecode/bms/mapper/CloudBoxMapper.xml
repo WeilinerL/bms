@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.crecode.bms.dao.CloudBoxMapper" >
+  <resultMap id="BaseResultMap" type="cn.crecode.bms.pojo.CloudBox" >
+    <id column="int_cloud_id" property="intCloudId" jdbcType="INTEGER" />
+    <result column="str_code_id" property="strCodeId" jdbcType="VARCHAR" />
+    <result column="str_mac_address" property="strMacAddress" jdbcType="VARCHAR" />
+    <result column="str_series_code" property="strSeriesCode" jdbcType="VARCHAR" />
+    <result column="str_series_name" property="strSeriesName" jdbcType="VARCHAR" />
+    <result column="str_version" property="strVersion" jdbcType="VARCHAR" />
+    <result column="date_of_manufacture" property="dateOfManufacture" jdbcType="TIMESTAMP" />
+    <result column="str_serial_number" property="strSerialNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_cloud_id, str_code_id, str_mac_address, str_series_code, str_series_name, str_version, 
+    date_of_manufacture, str_serial_number
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_cloud_box
+    where int_cloud_id = #{intCloudId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_cloud_box
+    where int_cloud_id = #{intCloudId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.crecode.bms.pojo.CloudBox" >
+    insert into t_cloud_box (int_cloud_id, str_code_id, str_mac_address, 
+      str_series_code, str_series_name, str_version, 
+      date_of_manufacture, str_serial_number)
+    values (#{intCloudId,jdbcType=INTEGER}, #{strCodeId,jdbcType=VARCHAR}, #{strMacAddress,jdbcType=VARCHAR}, 
+      #{strSeriesCode,jdbcType=VARCHAR}, #{strSeriesName,jdbcType=VARCHAR}, #{strVersion,jdbcType=VARCHAR}, 
+      #{dateOfManufacture,jdbcType=TIMESTAMP}, #{strSerialNumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.crecode.bms.pojo.CloudBox" >
+    insert into t_cloud_box
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intCloudId != null" >
+        int_cloud_id,
+      </if>
+      <if test="strCodeId != null" >
+        str_code_id,
+      </if>
+      <if test="strMacAddress != null" >
+        str_mac_address,
+      </if>
+      <if test="strSeriesCode != null" >
+        str_series_code,
+      </if>
+      <if test="strSeriesName != null" >
+        str_series_name,
+      </if>
+      <if test="strVersion != null" >
+        str_version,
+      </if>
+      <if test="dateOfManufacture != null" >
+        date_of_manufacture,
+      </if>
+      <if test="strSerialNumber != null" >
+        str_serial_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intCloudId != null" >
+        #{intCloudId,jdbcType=INTEGER},
+      </if>
+      <if test="strCodeId != null" >
+        #{strCodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="strMacAddress != null" >
+        #{strMacAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strSeriesCode != null" >
+        #{strSeriesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="strSeriesName != null" >
+        #{strSeriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="strVersion != null" >
+        #{strVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="dateOfManufacture != null" >
+        #{dateOfManufacture,jdbcType=TIMESTAMP},
+      </if>
+      <if test="strSerialNumber != null" >
+        #{strSerialNumber,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.crecode.bms.pojo.CloudBox" >
+    update t_cloud_box
+    <set >
+      <if test="strCodeId != null" >
+        str_code_id = #{strCodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="strMacAddress != null" >
+        str_mac_address = #{strMacAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strSeriesCode != null" >
+        str_series_code = #{strSeriesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="strSeriesName != null" >
+        str_series_name = #{strSeriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="strVersion != null" >
+        str_version = #{strVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="dateOfManufacture != null" >
+        date_of_manufacture = #{dateOfManufacture,jdbcType=TIMESTAMP},
+      </if>
+      <if test="strSerialNumber != null" >
+        str_serial_number = #{strSerialNumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where int_cloud_id = #{intCloudId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.crecode.bms.pojo.CloudBox" >
+    update t_cloud_box
+    set str_code_id = #{strCodeId,jdbcType=VARCHAR},
+      str_mac_address = #{strMacAddress,jdbcType=VARCHAR},
+      str_series_code = #{strSeriesCode,jdbcType=VARCHAR},
+      str_series_name = #{strSeriesName,jdbcType=VARCHAR},
+      str_version = #{strVersion,jdbcType=VARCHAR},
+      date_of_manufacture = #{dateOfManufacture,jdbcType=TIMESTAMP},
+      str_serial_number = #{strSerialNumber,jdbcType=VARCHAR}
+    where int_cloud_id = #{intCloudId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.crecode.bms.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="cn.crecode.bms.pojo.User" >
+    <id column="int_user_id" property="intUserId" jdbcType="INTEGER" />
+    <result column="str_tel_number" property="strTelNumber" jdbcType="VARCHAR" />
+    <result column="str_password" property="strPassword" jdbcType="VARCHAR" />
+    <result column="str_nickname" property="strNickname" jdbcType="VARCHAR" />
+    <result column="str_profession" property="strProfession" jdbcType="VARCHAR" />
+    <result column="str_real_name" property="strRealName" jdbcType="VARCHAR" />
+    <result column="str_address" property="strAddress" jdbcType="VARCHAR" />
+    <result column="str_email" property="strEmail" jdbcType="VARCHAR" />
+    <result column="str_user_type" property="strUserType" jdbcType="VARCHAR" />
+    <result column="str_open_id" property="strOpenId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_user_id, str_tel_number, str_password, str_nickname, str_profession, str_real_name, 
+    str_address, str_email, str_user_type, str_open_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where int_user_id = #{intUserId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_user
+    where int_user_id = #{intUserId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.crecode.bms.pojo.User" >
+    insert into t_user (int_user_id, str_tel_number, str_password, 
+      str_nickname, str_profession, str_real_name, 
+      str_address, str_email, str_user_type, 
+      str_open_id)
+    values (#{intUserId,jdbcType=INTEGER}, #{strTelNumber,jdbcType=VARCHAR}, #{strPassword,jdbcType=VARCHAR}, 
+      #{strNickname,jdbcType=VARCHAR}, #{strProfession,jdbcType=VARCHAR}, #{strRealName,jdbcType=VARCHAR}, 
+      #{strAddress,jdbcType=VARCHAR}, #{strEmail,jdbcType=VARCHAR}, #{strUserType,jdbcType=VARCHAR}, 
+      #{strOpenId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.crecode.bms.pojo.User" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intUserId != null" >
+        int_user_id,
+      </if>
+      <if test="strTelNumber != null" >
+        str_tel_number,
+      </if>
+      <if test="strPassword != null" >
+        str_password,
+      </if>
+      <if test="strNickname != null" >
+        str_nickname,
+      </if>
+      <if test="strProfession != null" >
+        str_profession,
+      </if>
+      <if test="strRealName != null" >
+        str_real_name,
+      </if>
+      <if test="strAddress != null" >
+        str_address,
+      </if>
+      <if test="strEmail != null" >
+        str_email,
+      </if>
+      <if test="strUserType != null" >
+        str_user_type,
+      </if>
+      <if test="strOpenId != null" >
+        str_open_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intUserId != null" >
+        #{intUserId,jdbcType=INTEGER},
+      </if>
+      <if test="strTelNumber != null" >
+        #{strTelNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="strPassword != null" >
+        #{strPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="strNickname != null" >
+        #{strNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="strProfession != null" >
+        #{strProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="strRealName != null" >
+        #{strRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="strAddress != null" >
+        #{strAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strEmail != null" >
+        #{strEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserType != null" >
+        #{strUserType,jdbcType=VARCHAR},
+      </if>
+      <if test="strOpenId != null" >
+        #{strOpenId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.crecode.bms.pojo.User" >
+    update t_user
+    <set >
+      <if test="strTelNumber != null" >
+        str_tel_number = #{strTelNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="strPassword != null" >
+        str_password = #{strPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="strNickname != null" >
+        str_nickname = #{strNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="strProfession != null" >
+        str_profession = #{strProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="strRealName != null" >
+        str_real_name = #{strRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="strAddress != null" >
+        str_address = #{strAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="strEmail != null" >
+        str_email = #{strEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserType != null" >
+        str_user_type = #{strUserType,jdbcType=VARCHAR},
+      </if>
+      <if test="strOpenId != null" >
+        str_open_id = #{strOpenId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where int_user_id = #{intUserId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.crecode.bms.pojo.User" >
+    update t_user
+    set str_tel_number = #{strTelNumber,jdbcType=VARCHAR},
+      str_password = #{strPassword,jdbcType=VARCHAR},
+      str_nickname = #{strNickname,jdbcType=VARCHAR},
+      str_profession = #{strProfession,jdbcType=VARCHAR},
+      str_real_name = #{strRealName,jdbcType=VARCHAR},
+      str_address = #{strAddress,jdbcType=VARCHAR},
+      str_email = #{strEmail,jdbcType=VARCHAR},
+      str_user_type = #{strUserType,jdbcType=VARCHAR},
+      str_open_id = #{strOpenId,jdbcType=VARCHAR}
+    where int_user_id = #{intUserId,jdbcType=INTEGER}
+  </update>
+</mapper>

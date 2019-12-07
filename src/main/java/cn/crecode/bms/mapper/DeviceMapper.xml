@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.crecode.bms.dao.DeviceMapper" >
+  <resultMap id="BaseResultMap" type="cn.crecode.bms.pojo.Device" >
+    <id column="int_device_id" property="intDeviceId" jdbcType="INTEGER" />
+    <result column="str_code_id" property="strCodeId" jdbcType="VARCHAR" />
+    <result column="str_user_tel" property="strUserTel" jdbcType="VARCHAR" />
+    <result column="str_device_name" property="strDeviceName" jdbcType="VARCHAR" />
+    <result column="str_device_address" property="strDeviceAddress" jdbcType="VARCHAR" />
+    <result column="int_detail_id" property="intDetailId" jdbcType="INTEGER" />
+    <result column="int_group_id" property="intGroupId" jdbcType="INTEGER" />
+    <result column="str_status" property="strStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    int_device_id, str_code_id, str_user_tel, str_device_name, str_device_address, int_detail_id, 
+    int_group_id, str_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device
+    where int_device_id = #{intDeviceId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_device
+    where int_device_id = #{intDeviceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.crecode.bms.pojo.Device" >
+    insert into t_device (int_device_id, str_code_id, str_user_tel, 
+      str_device_name, str_device_address, int_detail_id, 
+      int_group_id, str_status)
+    values (#{intDeviceId,jdbcType=INTEGER}, #{strCodeId,jdbcType=VARCHAR}, #{strUserTel,jdbcType=VARCHAR}, 
+      #{strDeviceName,jdbcType=VARCHAR}, #{strDeviceAddress,jdbcType=VARCHAR}, #{intDetailId,jdbcType=INTEGER}, 
+      #{intGroupId,jdbcType=INTEGER}, #{strStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.crecode.bms.pojo.Device" >
+    insert into t_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="intDeviceId != null" >
+        int_device_id,
+      </if>
+      <if test="strCodeId != null" >
+        str_code_id,
+      </if>
+      <if test="strUserTel != null" >
+        str_user_tel,
+      </if>
+      <if test="strDeviceName != null" >
+        str_device_name,
+      </if>
+      <if test="strDeviceAddress != null" >
+        str_device_address,
+      </if>
+      <if test="intDetailId != null" >
+        int_detail_id,
+      </if>
+      <if test="intGroupId != null" >
+        int_group_id,
+      </if>
+      <if test="strStatus != null" >
+        str_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="intDeviceId != null" >
+        #{intDeviceId,jdbcType=INTEGER},
+      </if>
+      <if test="strCodeId != null" >
+        #{strCodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserTel != null" >
+        #{strUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="strDeviceName != null" >
+        #{strDeviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="strDeviceAddress != null" >
+        #{strDeviceAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="intDetailId != null" >
+        #{intDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="intGroupId != null" >
+        #{intGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="strStatus != null" >
+        #{strStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.crecode.bms.pojo.Device" >
+    update t_device
+    <set >
+      <if test="strCodeId != null" >
+        str_code_id = #{strCodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="strUserTel != null" >
+        str_user_tel = #{strUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="strDeviceName != null" >
+        str_device_name = #{strDeviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="strDeviceAddress != null" >
+        str_device_address = #{strDeviceAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="intDetailId != null" >
+        int_detail_id = #{intDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="intGroupId != null" >
+        int_group_id = #{intGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="strStatus != null" >
+        str_status = #{strStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where int_device_id = #{intDeviceId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.crecode.bms.pojo.Device" >
+    update t_device
+    set str_code_id = #{strCodeId,jdbcType=VARCHAR},
+      str_user_tel = #{strUserTel,jdbcType=VARCHAR},
+      str_device_name = #{strDeviceName,jdbcType=VARCHAR},
+      str_device_address = #{strDeviceAddress,jdbcType=VARCHAR},
+      int_detail_id = #{intDetailId,jdbcType=INTEGER},
+      int_group_id = #{intGroupId,jdbcType=INTEGER},
+      str_status = #{strStatus,jdbcType=VARCHAR}
+    where int_device_id = #{intDeviceId,jdbcType=INTEGER}
+  </update>
+</mapper>
